@@ -80,25 +80,28 @@ OPTION = '3'
 title = "Supervised Learning System"
  # In this case, the Python file for the formulation would be named End_Poverty.py.
 
-approach = '''Our approach will be to first understand the rules,
-then code our move generator, develop a static evaluation function,
-a personality for the agent, and then optimize using alpha-beta
-pruning, Zobrist hashing, and comparison of alternative static
-evaluation functions.'''
+approach = '''We will first find two picture datasets to use. 
+Then we will develop a decision tree learning agent using random forests, 
+and a neural network learning agent. Next we will try both bagging and
+boosting to determine which works better. Finally we will create a 
+command line interface and reporting system.'''
 
-workload_distribution = '''Maggie will have primary responsibility for the 
-static evaluation function, John will have primary responsibility for
-the optimizations of alpha-beta pruning and Zobrist hashing, and both
-partners expect to be closely involved in writing the move-generation
-code and defining the personality of the agent.'''
+workload_distribution = '''We will work together to choose the picture datasets.
+Quinn will be responsible for creating the decision tree learning agent and bagging system. 
+Shannon will be responsible for creating the neural network learning agent and boosting system.
+We will work together to determine if bagging or boosting is better for each algorithm.
+Finally, we will work together on the command line interface and reporting system.'''
 
-reference1 = '''Wikipedia article on Baroque Chess;
-    URL: https://en.wikipedia.org/wiki/Baroque_chess (accessed Feb. 22, 2018)'''
+reference1 = '''"What is the Difference Between Bagging and Boosting," on QuantDare.com,
+    available online at: https://quantdare.com/what-is-the-difference-between-bagging-and-boosting/'''
 
-reference2 = '''"What\'s Wrong with Ultima," by Robert Abbott,
-    available online at: http://www.logicmazes.com/games/wgr.html'''
+reference2 = '''"Neural Networks from Scratch in Python," by Cristian Dima,
+    available online at: http://www.cristiandima.com/neural-networks-from-scratch-in-python/'''
 
-our_submission = Who_and_what(team, OPTION, title, approach, workload_distribution, [reference1, reference2])
+reference3 = ''''"Random Forests for Regression and Classification," by Adele Cutler, Utah State University,
+    available online at: http://www.math.usu.edu/adele/RandomForests/Ovronnaz.pdf'''
+
+our_submission = Who_and_what(team, OPTION, title, approach, workload_distribution, [reference1, reference2, reference3])
 
 # You can run this file from the command line by typing:
 # python3 who_and_what.py
