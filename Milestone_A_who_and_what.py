@@ -71,7 +71,7 @@ Team:
 # Change the following to represent your own information:
 
 quinn = Partner("Abrahams-Vaughn", "Quinn", "abrahq")
-shannon = Partner("Ladymon", "Shannon", "??????")
+shannon = Partner("Ladymon", "Shannon", "sladymon")
 team = [quinn, shannon]
 
 OPTION = '3'
