@@ -6,6 +6,7 @@ Created on Tue Feb 27 07:53:39 2018
 @author: quinn
 """
 from data import data
+from random import sample as rSample
 
 class dataSet(list):
     """
@@ -14,7 +15,7 @@ class dataSet(list):
     format that is readable { [ atributes ] classifier }
     """
     def __init__(self,fileName=None):
-        self.header = ""
+        self.header = data()
         self.max = []
         self.min = []
         list.__init__(self)
@@ -56,8 +57,22 @@ class dataSet(list):
                     self.max[j] = d[j]
                 elif d[j]<self.min[j]:
                     self.min[j] = d[j]
+
+    def randSubSet(self,k=25):
+        """returns a random sub set of size k from the data set"""
+        out = dataSet()
+        out.header = self.header
+        out.extend(rSample(self,k))
+        out.findMinMax()
+        return out
     
 if __name__=="__main__":
     dS = dataSet("iris.csv")
     print(dS)
+    new_dS = dS.randSubSet(25)
+    print(new_dS)
+    
+    
+    
+    
     
