@@ -10,7 +10,7 @@ class data(list):
     """
     class to hold data for machine learning alogrithms in a standard way
     expands list with a way to read a line of csv, and to print out in a
-    format that is readable { { atributes } classifier }
+    format that is readable { [ atributes ] classifier }
     """
     def __init__(self,inString=None):
         list.__init__(self)
@@ -38,8 +38,8 @@ class data(list):
                     self.append(ele)
     
     def attributes(self):
-        """returns just the attributes of the data"""
-        return self[:len(self)-1]
+        """returns a copy of the attributes of the data"""
+        return [ i for i in self[:len(self)-1] ]
     
     def classifier(self):
         """returns the classifier of the data"""
