@@ -34,6 +34,17 @@ def convert_data(fileName,classifier):
     data.close()
     return (header,trD,vD,teD)
 
+def save_data(fileName,data,header):
+    file = open(fileName,"w")
+    for ele in header:
+        file.write(ele+",")
+    file.write("color\n")
+    for line in data:
+        for ele in line:
+            file.write(ele+",")
+        file.write("\n")
+    file.close()
+
 
 redFile = "winequality-red.csv"
 whiteFile = "winequality-white.csv"
@@ -52,30 +63,8 @@ if __name__=="__main__":
     rShuffle(teD)
     rShuffle(vD)
     
-    file = open(trainFile,"w")
-    for ele in header:
-        file.write(ele+",")
-    file.write("color\n")
-    for line in trD:
-        for ele in line:
-            file.write(ele+",")
-        file.write("\n")
-    file.close()
+    save_data(trainFile,trD,header)
+    save_data(validFile,vD,header)
+    save_data(testFile,teD,header)
     file = open(validFile,"w")
-    for ele in header:
-        file.write(ele+",")
-    file.write("color\n")
-    for line in vD:
-        for ele in line:
-            file.write(ele+",")
-        file.write("\n")
-    file.close()
-    file = open(testFile,"w")
-    for ele in header:
-        file.write(ele+",")
-    file.write("color\n")
-    for line in teD:
-        for ele in line:
-            file.write(ele+",")
-        file.write("\n")
-    file.close()
+
