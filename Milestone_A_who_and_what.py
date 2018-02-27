@@ -80,14 +80,14 @@ OPTION = '3'
 title = "Supervised Learning System"
  # In this case, the Python file for the formulation would be named End_Poverty.py.
 
-approach = '''We will first find two picture datasets to use. 
-Then we will develop a decision tree learning agent using random forests, 
+approach = '''We will be using the Fisher Iris Dataset and an original dataset which
+combines two datasets on white an red wines (classifying white/red based on features of the wine). 
+We will develop a decision tree learning agent using random forests, 
 and a neural network learning agent. Next we will try both bagging and
 boosting to determine which works better. Finally we will create a 
 command line interface and reporting system.'''
 
-workload_distribution = '''We will work together to choose the picture datasets.
-Quinn will be responsible for creating the decision tree learning agent and bagging system. 
+workload_distribution = '''Quinn will be responsible for creating the decision tree learning agent and bagging system. 
 Shannon will be responsible for creating the neural network learning agent and boosting system.
 We will work together to determine if bagging or boosting is better for each algorithm.
 Finally, we will work together on the command line interface and reporting system.'''
