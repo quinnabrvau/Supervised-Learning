@@ -83,13 +83,12 @@ title = "Supervised Learning System"
 approach = '''We will be using the Fisher Iris Dataset and an original dataset which
 combines two datasets on white an red wines (classifying white/red based on features of the wine). 
 We will develop a decision tree learning agent using random forests, 
-and a neural network learning agent. Next we will try both bagging and
-boosting to determine which works better. Finally we will create a 
-command line interface and reporting system.'''
+and a neural network learning agent. Next we will implement bagging. 
+Finally we will create a command line interface and reporting system.'''
 
-workload_distribution = '''Quinn will be responsible for creating the decision tree learning agent and bagging system. 
-Shannon will be responsible for creating the neural network learning agent and boosting system.
-We will work together to determine if bagging or boosting is better for each algorithm.
+workload_distribution = '''Quinn will be responsible for creating the decision tree learning agent. 
+Shannon will be responsible for creating the neural network learning agent.
+We will work together to implement bagging.
 Finally, we will work together on the command line interface and reporting system.'''
 
 reference1 = '''"What is the Difference Between Bagging and Boosting," on QuantDare.com,
