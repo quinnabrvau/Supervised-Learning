@@ -39,8 +39,10 @@ class dataSet(list):
                 return
             self.findMinMax()
             self.findClasses()
+            
 
     def findClasses(self):
+        self.classes = []
         for i in range(len(self)):
             if self[i][-1] not in self.classes:
                 self.classes.append(self[i][-1])
@@ -60,7 +62,7 @@ class dataSet(list):
                 r2 += "%.2f" % self.min[i] + "\t, "
                 r3 += "%.2f" % self.mean[i] + "\t, "
                 r4 += "%.2f" % self.std[i] + "\t, "
-            out += r1[:-3]+"]\n"+r2[:-3]+"]\n"+r3[:-3]+"]\n"+r4[:-3]+"]\n"
+            out += r1[:-3]+"\t]\n"+r2[:-3]+"\t]\n"+r3[:-3]+"\t]\n"+r4[:-3]+"\t]\n"
         if len(self.classes):
             out += "classes: "
             for c in self.classes:
@@ -87,7 +89,7 @@ class dataSet(list):
         self.max = self[0].attributes()
         self.min = self[0].attributes()
         self.mean = [0 for i in self[0].attributes()]
-        self.std = self[0].attributes()
+        self.std = [i*i for i in self[0].attributes()]
         for i in range(1,len(self)):
             d = self[i]
             for j in range(len(d)-1):
@@ -116,11 +118,15 @@ class dataSet(list):
                 self[i][j] = (self[i][j]-self.min[j])*scalarM[j]+small
         self.findMinMax()
 
-    def normStd(self):
+    def normStd(self,mean=None,std=None):
+        if mean==None:
+            mean=self.mean
+        if std==None:
+            std=self.std
         for i in range(len(self)):
             for j in range(len(self[i])-1):
-                self[i][j] -= self.mean[j]
-                self[i][j] /= self.std[j]
+                self[i][j] -= mean[j]
+                self[i][j] /= std[j]
         self.findMinMax()
 
     def devide(self,split):
@@ -132,7 +138,9 @@ class dataSet(list):
                     self[i][j]=0
         self.findMinMax()
 
-    def strings2Ints(self):
+    def strings2Ints(self,mut=None):
+        if mut!=None:
+            self.mut = mut
         k = 0
         self.mut = {}
         for i in range(len(self)):
@@ -147,6 +155,7 @@ class dataSet(list):
                         k+=1
                     else:
                         self[i][j] = self.mut[self[i][j]]
+        self.findClasses()
 
     def getString(self,val):
         return self.mut[val]

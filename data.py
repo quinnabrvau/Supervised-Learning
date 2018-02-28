@@ -55,7 +55,7 @@ class data(list):
         """prints the data in readable format"""
         if len(self) < 1: return "{ [  ]   } error no data"
         out = "{   ["
-        for j in self[0:-2]:
+        for j in self[0:-1]:
             if isinstance(j,float) or isinstance(j,int):
                 out += ("%.2f" % j) + "\t, "
             else:
