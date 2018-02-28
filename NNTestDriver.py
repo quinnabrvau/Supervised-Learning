@@ -30,40 +30,47 @@ def calculate_accuracy(Y, Y_predict):
 
 
 if __name__ == "__main__":
-    train,test,valid = getIrisData(1)
-    train,test,valid = getWineData(1)
+
+    # Get training, testing, and validation data
+    # and put into ndarray format
+
+    #train, test, valid = getIrisData(1)
+    #num_classifications = 3  # TODO: Fix this to call from data (add dataSet method?)
+
+    train, test, valid = getWineData(1)
+    num_classifications = 13
+
     train_data = np.asarray(train)
     test_data = np.asarray(test)
     valid_data = np.asarray(valid)
 
-    # Create numpy ndarray matrices of samples and their attributes (as floats)
-    # leaving off the first row with the column names
-    # and the last two columns, which hold the classification and an empty row
-    X_train = train_data[1:, :-1]
-    X_train = X_train.astype(float)
-    X_test = test_data[1:, :-1]
-    X_test = X_test.astype(float)
-    X_valid = valid_data[1:, :-1]
-    X_valid = X_valid.astype(float)
+    # Create the samples ndarray matrices with only the columns for the features
+    # (leaving off the last column, which holds the classifications)
+    X_train = train_data[:, :-1]
+    X_test = test_data[:, :-1]
+    X_valid = valid_data[:, :-1]
 
-    # Create numpy ndarray vectors for the classifications for the samples
-    # with 0 for red, and 1 for white
-    Y_train = np.asarray([int(row[-1] == 'w') for row in train_data[1:]])
-    Y_test = np.asarray([int(row[-1] == 'w') for row in test_data[1:]])
-    Y_valid = np.asarray([int(row[-1] == 'w') for row in valid_data[1:]])
+    # Create the classification ndarray vectors from the last column of the data
+    Y_train = (train_data[:, -1]).astype(int)
+    Y_test = (test_data[:, -1]).astype(int)
+    Y_valid = (valid_data[:, -1]).astype(int)
 
     # Create a new neural net
     num_train_samples, num_features = X_train.shape
-    num_classifications = 2
     alpha = 10e-5  # learning rate
     nn = NeuralNet(num_features, num_classifications, alpha)
 
     # Train the neural net on the training data
     nn.train(X_train, Y_train)
 
-    # # Use the test data to predict classes to see how well the neural net classifies
+    # Use the test data to predict classes to see how well the neural net classifies
     Y_train_predict = nn.predict(X_train)
     Y_test_predict = nn.predict(X_test)
+
+    # TODO: Clean up after testing
+    print(Y_train)
+    print(Y_train_predict)
+    print(calculate_accuracy(Y_train, Y_train_predict))
 
     print(Y_test)
     print(Y_test_predict)
