@@ -9,6 +9,7 @@ Test Driver to use in testing our learning agents
 
 import csv
 import numpy as np
+from NeuralNet import NeuralNet
 
 if __name__ == "__main__":
 
@@ -33,6 +34,22 @@ if __name__ == "__main__":
     Y_train = np.asarray([int(row[-2] == 'w') for row in train_data[1:]])
     Y_test = np.asarray([int(row[-2] == 'w') for row in test_data[1:]])
     Y_valid = np.asarray([int(row[-2] == 'w') for row in valid_data[1:]])
+
+    # Create a new neural net
+    num_train_samples, num_features = X_train.shape
+    num_classifications = 2
+    nn = NeuralNet(num_features, num_classifications)
+
+    #print(Y_train)
+
+    # Train the neural net on the training data
+    nn.train(X_train, Y_train)
+
+    # # Use the test data to predict classes to see how well the neural net classifies
+    # y_predict = nn.predict(X_test)
+
+
+
 
 
 
