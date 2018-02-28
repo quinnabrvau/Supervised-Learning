@@ -23,6 +23,8 @@ class data(list):
         s_strip = inString.strip("\n")
         s_split = s_strip.split(",")
         for ele in s_split:
+            if ele == "":
+                continue
             try:
                 if str(int(ele))==ele:
                     self.append(int(ele))

@@ -7,6 +7,7 @@ Created on Tue Feb 27 07:53:39 2018
 """
 from data import data
 from random import sample as rSample
+import numpy as np
 
 class dataSet(list):
     """
@@ -67,11 +68,12 @@ class dataSet(list):
         return out
     
 if __name__=="__main__":
-    dS = dataSet("iris.csv")
+    dS = dataSet("wineValidData.csv")
     print(dS)
     new_dS = dS.randSubSet(25)
     print(new_dS)
-    
+    print(np.asarray(dS))
+
     
     
     
