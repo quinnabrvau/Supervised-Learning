@@ -8,7 +8,7 @@ reference: https://machinelearningmastery.com/implement-decision-tree-algorithm-
 """
 from dataSet import dataSet
 from data import data
-
+from math import sqrt
 
 class DecisionTree(dataSet):
     def __init__(self,dS = None,atr = None):
@@ -51,7 +51,9 @@ class DecisionTree(dataSet):
                 i,v = key,com[key]
         return i
 
-    def buildTree(self):
+    def buildTree(self,n=0):
+        if n==0:
+            self.children = []
         self.i,self.v,gr,s = self.getSplit()
         self.atr.append(self.i)
         for g in gr:
@@ -73,23 +75,33 @@ class DecisionTree(dataSet):
             print(".."*n,"index",self.i,"value",self.v)
             for c in self.children:
                 c.printTree(n+1)
+        if n == 0:
+            i = self.mostCommon()
+            try:
+                print(".."*n,self.getString(i))
+            except:
+                print(".."*n,i)
 
     def searchTree(self,d,n=0):
+        if n==0 and i==-1:
+            self.buildTree()
         if self.isLeaf():
             if self==None or len(self)==0:
                 return None
             else:
-                try:
-                    return self.getString(self.v)
-                except:
-                    return self.v
+                return self.v
         else:
-            for c in self.children:
-                val = c.searchTree(d,n+1)
-                if val != None:
-                    return val
+            val = None
+            if d[self.i] < self.v:
+                val = self.children[0].searchTree(d,n+1)
+            else:
+                val = self.children[1].searchTree(d,n+1)
+            if val != None:
+                #print("found")
+                return val
         if n:
             return None
+        #print("mostCommon")
         return self.mostCommon()
 
 
@@ -117,17 +129,19 @@ class DecisionTree(dataSet):
             if j in self.atr:
                 continue
             for i in range(len(self)):
-                groups = self.splitAttribute(j,self[i][j])
+                groups = self.splitAttribute(j,self[i][j]) # [big, little]
                 gini = self.giniIndex(groups)
                 if gini < b_score:
                     b_index, b_value, b_score, b_groups = j, self[i][j], gini, groups
         return b_index, b_value, b_groups, b_score
 
 if __name__=="__main__":
-    dS = dataSet("wineValidData.csv")
+    dS = dataSet("wineTrainData.csv")
+    mean = [i for i in dS.mean]
+    std = [i for i in dS.std]
     dS.normStd()
     dS.strings2Ints()
-    dSs = dS.randSubSet(250)
+    dSs = dS.randSubSet(200)
     tree = DecisionTree(dSs)
     print(tree)
     i,v,g,s = tree.getSplit()
@@ -142,6 +156,26 @@ if __name__=="__main__":
     #print(tree.isLeaf())
     print("\n\n\n")
     tree.printTree()
+    dS = dataSet("wineTestData.csv")
+    # dS = dS.randSubSet(25)
+    # print(tree.mean)
+    # print(tree.std)
+    # print(dS.mean)
+    # print(dS.std)
+    dS.normStd(mean,std)
+    dS.strings2Ints(tree.mut)
+    #print(dS)
+    errorE = 0
+    successE = 0
+    for d in dS:
+        r = tree.searchTree(d)
+        #print("guess:",r,"actual:",d.classifier())
+        if r==d.classifier():
+            successE+=1
+        else:
+            errorE+=1
+    print("success:",successE,"error:",errorE,"acuracy:",(successE/(errorE+successE)))
+
 
 
 
