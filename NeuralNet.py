@@ -26,6 +26,7 @@ class NeuralNet:
         self.b2 = np.random.randn(self.num_classifications)
 
     # TODO: try to fix the overflow error for exp
+    # C:\Users\shann\Documents\dev\py\cse415\slearning\NeuralNet.py:82: RuntimeWarning: overflow encountered in exp return 1.0 / (1.0 + np.exp(-Z))
     def train(self, X, Y):
         """Trains the neural net based on the numpy ndarray X matrix of samples and features
         using the numpy ndarray vector Y of associated classifications to update the model"""
@@ -38,10 +39,12 @@ class NeuralNet:
             one_hot_encodings[i, Y[i]] = 1
 
         # run 10000 training steps to get more accurate weights and predictions
-        for epoch in range(10000):  # TODO: change to 10,000
+        for epoch in range(10000):  # TODO: Change to 10,000
             loss = self._train_single_step(X, one_hot_encodings)
-            if epoch % 100 == 0:
-                print("Loss function value: ", loss)  # TODO: Delete after testing
+
+            # # TODO: Delete after testing
+            # if epoch % 100 == 0:
+            #     print("Loss function value: ", loss)
 
 
     def _train_single_step(self, X, one_hot_encodings):
@@ -68,7 +71,12 @@ class NeuralNet:
 
     def predict(self, X):
         """Returns a numpy ndarray vector with predicted classifications for the X data"""
-        return None  # TODO: return the predicted classification
+        # do a feed forward pass of the data to get predicted classifications
+        A = sigmoid(np.dot(X, self.W1) + self.b1)  # gets an activation matrix for the hidden layer
+        Y_hat = softmax(np.dot(A, self.W2) + self.b2)  # gets predicted classification values
+
+        # return predicted values for this dataset
+        return np.argmax(Y_hat, axis=1)
 
 
 def sigmoid(Z):

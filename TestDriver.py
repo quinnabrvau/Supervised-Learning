@@ -11,6 +11,24 @@ import csv
 import numpy as np
 from NeuralNet import NeuralNet
 
+
+def calculate_accuracy(Y, Y_predict):
+    total_entries = Y.shape[0]
+    total_matching = 0
+
+    # TODO: Delete after testing
+    # print(type(Y))
+    # print(type(Y_predict))
+    # print(Y.shape)
+    # print(Y_predict.shape)
+
+    for i in range(total_entries):
+        if Y[i] == Y_predict[i]:
+            total_matching += 1
+
+    return total_matching / total_entries
+
+
 if __name__ == "__main__":
 
     # read the csv files and put wine data into numpy ndarrays
@@ -44,13 +62,17 @@ if __name__ == "__main__":
     alpha = 10e-5  # learning rate
     nn = NeuralNet(num_features, num_classifications, alpha)
 
-    #print(Y_train)
-
     # Train the neural net on the training data
     nn.train(X_train, Y_train)
 
     # # Use the test data to predict classes to see how well the neural net classifies
-    # y_predict = nn.predict(X_test)
+    Y_train_predict = nn.predict(X_train)
+    Y_test_predict = nn.predict(X_test)
+
+    print(Y_test)
+    print(Y_test_predict)
+    print(calculate_accuracy(Y_test, Y_test_predict))
+
 
 
 
