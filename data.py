@@ -12,11 +12,15 @@ class data(list):
     expands list with a way to read a line of csv, and to print out in a
     format that is readable { [ atributes ] classifier }
     """
-    def __init__(self,inString=None):
+    def __init__(self,In=None):
         list.__init__(self)
-        if inString!=None:
-            self.read(inString)
-            
+        if In==None:
+            pass
+        elif isinstance(In,str):
+            self.read(In)
+        elif isinstance(In,list):
+            list.__init__(self,In)
+
     def read(self,inString):
         """reads the line of a csv into the array"""
         self.clear()
@@ -49,9 +53,14 @@ class data(list):
     
     def __str__(self):
         """prints the data in readable format"""
-        if len(self) < 1: return "{ []  ]   }"
-        out = "{ "
-        out += str(self.attributes())+" "
+        if len(self) < 1: return "{ [  ]   } error no data"
+        out = "{   ["
+        for j in self[0:-2]:
+            if isinstance(j,float) or isinstance(j,int):
+                out += ("%.2f" % j) + "\t, "
+            else:
+                out += str(j) + ", "
+        out = out[:-2] + "] "
         out += str(self[-1]) + " }"
         return out
 
