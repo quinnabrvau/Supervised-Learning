@@ -7,7 +7,7 @@ Created on Mon Feb 26 17:22:14 2018
 """
 from random import shuffle as rShuffle
 
-def convert_data(fileName):
+def convert_data(fileName,div=";"):
     num_lines = sum(1 for line in open(fileName))
     data = open(fileName)
     testing = int(num_lines*0.2)
@@ -21,7 +21,7 @@ def convert_data(fileName):
     D = []
     for line in data:
         line_ = line.strip("\n")
-        line_split = line_.split(";")
+        line_split = line_.split(div)
         if i < 1:
             header = line_split
         else:
@@ -54,26 +54,18 @@ def save_data(fileName,data,header):
         file.write(out[:-1]+"\n")
     file.close()
 
-
-redFile = "winequality-red.csv"
-whiteFile = "winequality-white.csv"
-trainFile = "wineTrainData.csv"
-validFile = "wineValidData.csv"
-testFile  = "wineTestData.csv"
-
-
-if __name__=="__main__":
-    (header,trD, vD, teD) = convert_data(redFile)
-    # (ignore,trDw, vDw, teDw) = convert_data(redFile,"w")
-    # trD = trDr + trDw
-    # vD  = vDr + vDw
-    # teD = teDr + teDw
-    # rShuffle(trD)
-    # rShuffle(teD)
-    # rShuffle(vD)
-    print(len(vD),len(trD),len(teD))
-    print(vD)
+def combine(fileName,div,fileRoot):
+    trainFile = fileRoot+"TrainData.csv"
+    validFile = fileRoot+"ValidData.csv"
+    testFile  = fileRoot+"TestData.csv"
+    (header,trD, vD, teD) = convert_data(fileName,div)
     save_data(trainFile,trD,header)
     save_data(validFile,vD,header)
     save_data(testFile,teD,header)
+
+
+if __name__=="__main__":
+    combine("winequality-red.csv",";","wine")
+    combine("iris.csv",",","iris")
+    
 

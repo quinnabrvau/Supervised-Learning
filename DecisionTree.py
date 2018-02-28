@@ -6,7 +6,7 @@ Created on Tue Feb 27 19:48:26 2018
 @author: quinn
 reference: https://machinelearningmastery.com/implement-decision-tree-algorithm-scratch-python/
 """
-from dataSet import dataSet
+from dataSet import dataSet, getIrisData, getWineData
 from data import data
 from math import sqrt
 
@@ -53,6 +53,7 @@ class DecisionTree(dataSet):
 
     def buildTree(self,n=0):
         if n==0:
+            print("building tree:")
             self.children = []
         self.i,self.v,gr,s = self.getSplit()
         self.atr.append(self.i)
@@ -60,30 +61,32 @@ class DecisionTree(dataSet):
             self.children.append(DecisionTree(g,self.atr))
         for c in self.children:
             if not c.isLeaf():
-                c.buildTree()
+                c.buildTree(n+1)
+        if n==0:
+            print("tree built")
 
     def printTree(self,n=0):
         if self.isLeaf():
             if self==None or len(self)==0:
-                print(".."*n,"NULL")
+                print(".."*n,"NULL",sep=' < ')
             else:
                 try:
-                    print(".."*n,self.getString(self.v))
+                    print(".."*n,self.getString(self.v),sep='')
                 except:
-                    print(".."*n,self.v)
+                    print(".."*n,self.v,sep='')
         else:
-            print(".."*n,"index",self.i,"value",self.v)
+            print(".."*n,"index",self.i,"value < ",self.v,sep='')
             for c in self.children:
                 c.printTree(n+1)
         if n == 0:
             i = self.mostCommon()
             try:
-                print(".."*n,self.getString(i))
+                print(self.getString(i))
             except:
-                print(".."*n,i)
+                print(i)
 
     def searchTree(self,d,n=0):
-        if n==0 and i==-1:
+        if n==0 and self.i==-1:
             self.buildTree()
         if self.isLeaf():
             if self==None or len(self)==0:
@@ -92,19 +95,15 @@ class DecisionTree(dataSet):
                 return self.v
         else:
             val = None
-            if d[self.i] < self.v:
+            if d[self.i] > self.v:
                 val = self.children[0].searchTree(d,n+1)
             else:
                 val = self.children[1].searchTree(d,n+1)
             if val != None:
-                #print("found")
                 return val
         if n:
             return None
-        #print("mostCommon")
         return self.mostCommon()
-
-
 
     def giniIndex(self,groups):
         gini = 0.0
@@ -136,45 +135,53 @@ class DecisionTree(dataSet):
         return b_index, b_value, b_groups, b_score
 
 if __name__=="__main__":
-    dS = dataSet("wineTrainData.csv")
-    mean = [i for i in dS.mean]
-    std = [i for i in dS.std]
-    dS.normStd()
-    dS.strings2Ints()
-    dSs = dS.randSubSet(200)
-    tree = DecisionTree(dSs)
-    print(tree)
-    i,v,g,s = tree.getSplit()
-    print("index",i)
-    print("value",v)
-    print("score",s)
-    for G in g:
-        print("new group")
-        print(G)
+    # f = "wine"
+    # dS = dataSet(f+"TrainData.csv")
+    # mean = [i for i in dS.mean]
+    # std = [i for i in dS.std]
+    # dS.normStd()
+    # dS.strings2Ints()
+    # dSs = dS.randSubSet(200)
+    # tree = DecisionTree(dSs)
+    # print(tree)
+    # i,v,g,s = tree.getSplit()
+    # print("index",i)
+    # print("value",v)
+    # print("score",s)
+    # for G in g:
+    #     print("new group")
+    #     print(G)
 
+    # tree.buildTree()
+    # #print(tree.isLeaf())
+    # print("\n\n\n")
+    # tree.printTree()
+    # dS = dataSet(f+"TestData.csv")
+    # # dS = dS.randSubSet(25)
+    # # print(tree.mean)
+    # # print(tree.std)
+    # # print(dS.mean)
+    # # print(dS.std)
+    # dS.normStd(mean,std)
+    # dS.strings2Ints(tree.mut)
+    #train, test, valid = getIrisData()
+    train, test, valid = getWineData()
+    tree = DecisionTree(train.randSubSet(100))
     tree.buildTree()
-    #print(tree.isLeaf())
-    print("\n\n\n")
+    print(tree)
+    print(tree.mut)
     tree.printTree()
-    dS = dataSet("wineTestData.csv")
-    # dS = dS.randSubSet(25)
-    # print(tree.mean)
-    # print(tree.std)
-    # print(dS.mean)
-    # print(dS.std)
-    dS.normStd(mean,std)
-    dS.strings2Ints(tree.mut)
     #print(dS)
     errorE = 0
     successE = 0
-    for d in dS:
+    for d in test:
         r = tree.searchTree(d)
         #print("guess:",r,"actual:",d.classifier())
         if r==d.classifier():
             successE+=1
         else:
             errorE+=1
-    print("success:",successE,"error:",errorE,"acuracy:",(successE/(errorE+successE)))
+    print("success:",successE,"error:",errorE,"acuracy:", ("%.2f" % (100*(successE/(errorE+successE)))) +"%"  )
 
 
 

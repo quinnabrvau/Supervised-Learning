@@ -8,7 +8,6 @@ Created on Tue Feb 27 07:53:39 2018
 from math import sqrt
 from data import data
 from random import sample as rSample
-import numpy as np
 
 class dataSet(list):
     """
@@ -109,7 +108,9 @@ class dataSet(list):
             if self.std[j]<0: self.std[j]=0
             self.std[j] =sqrt(self.std[j])
 
-    def normRange(self,small,large):
+    def normRange(self,small=0,large=1,lit=None,big=None):
+        if lit!=None: self.min=lit
+        if big!=None: self.max=big
         scalarM = self[0].attributes()
         for j in range(len(self.max)):
             scalarM[j] = (large-small)/(self.max[j]-self.min[j])
@@ -150,7 +151,7 @@ class dataSet(list):
                         if j == len(self[i])-1:
                             self.classes.append(k)
                         self.mut[self[i][j]] = k
-                        self.mut[i] = self[i][j]
+                        self.mut[k] = self[i][j]
                         self[i][j] = k
                         k+=1
                     else:
@@ -162,6 +163,11 @@ class dataSet(list):
 
     def randSubSet(self,k=25):
         """returns a random sub set of size k from the data set"""
+        print("building sub set")
+        if k>len(self):
+            print("attempting to devide set into a set smaller then original set" + \
+                " returning original set")
+            return self
         out = dataSet()
         out.header = self.header
         out.extend(rSample(self,k))
@@ -185,13 +191,49 @@ class dataSet(list):
         lit.mut = self.mut
         return [big, lit]
 
+def getIrisData(normalize=0):
+    """returns the iris training, testing and validating data and normalized if normalize==True"""
+    out = getData("iris",normalize)
+    out[0].strings2Ints()
+    out[1].strings2Ints(out[0].mut)
+    out[2].strings2Ints(out[0].mut)
+    return out
+
+def getWineData(normalize=0):
+    """returns the wine training, testing and validating data and normalized if normalize==True"""
+    return getData("wine",normalize)
+
+def getData(name="iris",normalize=0):
+    """returns the data sets, normalized if normalize==True"""
+    print("reading in files for:",name,"data set")
+    out = [dataSet(name+"TrainData.csv"),dataSet(name+"TestData.csv"),dataSet(name+"ValidData.csv")]
+    if normalize==1:
+        print("normalizing to standard deviation")
+        mean, std = out[0].mean,out[0].std
+        out[0].normStd()
+        out[1].normStd(mean, std)
+        out[2].normStd(mean, std)
+    elif normalize==2:
+        print("normalizing to range 0 to 1")
+        lit, big = out[0].min,out[0].max
+        out[0].normRange(0,1)
+        out[1].normRange(0,1,lit, big)
+        out[2].normRange(0,1,lit, big)
+    print("successfully read all files for:",name,"data set")
+    return out
+
+
 
 if __name__=="__main__":
+    import numpy as np
     dS = dataSet("wineValidData.csv")
     # print(dS)
     new_dS = dS.randSubSet(25)
     print(new_dS)
+
+    #numpy array example
     print(np.asarray(dS))
+
     new_dS.normRange(-1,1)
     print(new_dS)
     new_dS = dS.randSubSet(25)
@@ -199,6 +241,13 @@ if __name__=="__main__":
     print(new_dS)
     new_dS.devide(0)
     print(new_dS)
+
+    for s in getIrisData(2):
+        print(s)
+    for s in getWineData():
+        print(s)
+
+
     
     
     
