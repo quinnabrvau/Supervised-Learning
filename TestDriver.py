@@ -22,12 +22,15 @@ if __name__ == "__main__":
     test_data = np.asarray(list(test_reader))
     valid_data = np.asarray(list(valid_reader))
 
-    # Create numpy ndarray matrices of samples and their attributes
+    # Create numpy ndarray matrices of samples and their attributes (as floats)
     # leaving off the first row with the column names
     # and the last two columns, which hold the classification and an empty row
     X_train = train_data[1:, :-2]
+    X_train = X_train.astype(float)
     X_test = test_data[1:, :-2]
+    X_test = X_test.astype(float)
     X_valid = valid_data[1:, :-2]
+    X_valid = X_valid.astype(float)
 
     # Create numpy ndarray vectors for the classifications for the samples
     # with 0 for red, and 1 for white
@@ -38,7 +41,8 @@ if __name__ == "__main__":
     # Create a new neural net
     num_train_samples, num_features = X_train.shape
     num_classifications = 2
-    nn = NeuralNet(num_features, num_classifications)
+    alpha = 10e-5  # learning rate
+    nn = NeuralNet(num_features, num_classifications, alpha)
 
     #print(Y_train)
 
