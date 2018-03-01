@@ -8,6 +8,8 @@ Created on Wed Feb 28 21:27:14 2018
 
 from dataSet import dataSet, getIrisData, getWineData
 from DecisionTree import DecisionTree
+from random import sample as rSample
+from math import sqrt,ceil
 
 class RandomForest(list):
     def __init__(self,ty="iris",le=80,s=None):
@@ -25,11 +27,15 @@ class RandomForest(list):
 
     def buildForest(self):
         print("building forests")
-        mD = len(self.train[0].attributes())*2
-        mS = int(self.sub_size/20)+1
+        attributes = [i for i in range(len(self.train[0])-1)]
+        foo = ceil(sqrt(len(attributes))) #number of attributes to use
+        mD = foo*2
+        mS = 3
         for i in range(len(self)):
             # if i%int(len(self)/10)==0: print( "%.2" % 100*i/len(self)  , "%  built",sep="")
-            self[i].buildTree(mD,mS,True)
+            atr = rSample(attributes,foo)
+            print(atr)
+            self[i].buildTreeFor(mD,mS,atr,True)
         print("forest built")
 
     def searchForest(self,d):
@@ -37,6 +43,7 @@ class RandomForest(list):
         print("searching forest")
         for i in range(len(self)):
             # if i%int(le/10)==0:print( "%.2" % 100*i/le , "%  searcherd",sep="")
+
             p.append(self[i].searchTree(d))
         print("search complete")
         return max(set(p),key=p.count )
@@ -46,7 +53,7 @@ class RandomForest(list):
 
 
 if __name__=="__main__":
-    rf = RandomForest('wine',20,60)
+    rf = RandomForest('wine',20,100)
     error,success = 0,0
     for d in rf.test:
         r = rf.searchForest(d)

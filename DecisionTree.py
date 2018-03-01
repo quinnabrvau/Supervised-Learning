@@ -62,6 +62,7 @@ class DecisionTree(dataSet):
         self.split(mD,mS)
         if not shhh: print("tree built")
 
+
     def giniIndex(self,groups):
         n = sum([len(g) for g in groups])
         gini = 0.0
@@ -97,6 +98,45 @@ class DecisionTree(dataSet):
     def printTree(self):
         printTreeF(self,0,self)
 
+
+    #####Random Forest Variations of normal Tree Functions
+    def buildTreeFor(self,mD=NN,mS=MM,attributes=[0],shhh=False):
+        if not shhh: print("building tree:")
+        self.splitFor(mD,mS,attributes)
+        if not shhh: print("tree built")
+
+    def splitFor(self,mD,mS,attributes,depth=0):
+        self.i, self.v, groups, score = self.getSplitFor(attributes)
+        if groups==None:
+            return
+        self.lt, self.gt = groups[0], groups[1]
+        self.lt.atr.append(self.i)
+        self.gt.atr.append(self.i)
+        if self.lt==None or self.gt==None:
+            self.lt = self.gt = self.mostCommon()
+            return
+        if len(self.lt) <= mS or depth>mD:
+            if len(self.lt)==0: self.lt=self.mostCommon()
+            else: self.lt=self.lt.mostCommon()
+        else:
+            self.lt.splitFor(mD,mS,attributes,depth+1)
+        if len(self.gt) <= mS or depth>mD:
+            if len(self.gt)==0: self.gt=self.mostCommon()
+            else: self.gt=self.gt.mostCommon()
+        else:
+            self.gt.splitFor(mD,mS,attributes,depth+1)
+
+    def getSplitFor(self,attributes):
+        b_index, b_value, b_score, b_groups = 999, 999, 999, None
+        for j in attributes:
+            if self.atr.count(j) > 2: continue
+            for i in range(len(self)):
+                groups = self.splitAttribute(j,self[i][j]) # lit, big
+                gini = self.giniIndex(groups)
+                if gini < b_score:
+                    b_index, b_value, b_score, b_groups = j, self[i][j], gini, groups
+        return b_index, b_value, b_groups, b_score
+
 def printTreeF(node,n,root):
     if isinstance(node,DecisionTree):
         print(".."*n,"[atr ",node.i," < ","%.2f" % node.v,"]",sep='')
@@ -107,6 +147,7 @@ def printTreeF(node,n,root):
 
 def searchTreeF(node,d):
     if isinstance(node,DecisionTree):
+        if node.i == 999: return node.mostCommon()
         if d[node.i] < node.v:
             return searchTreeF(node.lt,d)
         else:
