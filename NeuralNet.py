@@ -6,6 +6,9 @@ Final Project
 
 Neural Net learning agent
 which uses a 2-layer feedforward neural network
+Based on the resource:
+"Neural Networks from Scratch in Python," by Cristian Dima
+available online at: http://www.cristiandima.com/neural-networks-from-scratch-in-python/
 """
 
 import numpy as np
@@ -39,7 +42,7 @@ class NeuralNet:
             one_hot_encodings[i, Y[i]] = 1
 
         # run 10000 training steps to get more accurate weights and predictions
-        for epoch in range(10000):  # TODO: Change to 10,000
+        for epoch in range(10000):  # TODO: Change to loop until loss stops changing much?
             loss = self._train_single_step(X, one_hot_encodings)
 
             # # TODO: Delete after testing
@@ -47,7 +50,7 @@ class NeuralNet:
             #     print("Loss function value: ", loss)
 
 
-    def _train_single_step(self, X, one_hot_encodings):
+    def _train_single_step(self, X, one_hot_encodings):  # TODO: Change to "single_epoch" instead?
         """Does a single step of feedforward and backpropogation"""
 
         # do a feed forward pass of the data to get predicted classifications
@@ -79,7 +82,7 @@ class NeuralNet:
         return np.argmax(Y_hat, axis=1)
 
 
-def sigmoid(Z):
+def sigmoid(Z):  # TODO: consider changing to tanh instead
     return 1.0 / (1.0 + np.exp(-Z))
 
 

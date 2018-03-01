@@ -10,17 +10,13 @@ Test Driver to use in testing our learning agents
 import numpy as np
 from dataSet import dataSet, getIrisData, getWineData
 from NeuralNet import NeuralNet
+import time
 
 
-def calculate_accuracy(Y, Y_predict):
+def calculate_accuracy(Y, Y_predict):  # TODO: Break into a separate Report class
+    """Returns the percentage of accurate predictions"""
     total_entries = Y.shape[0]
     total_matching = 0
-
-    # TODO: Delete after testing
-    # print(type(Y))
-    # print(type(Y_predict))
-    # print(Y.shape)
-    # print(Y_predict.shape)
 
     for i in range(total_entries):
         if Y[i] == Y_predict[i]:
@@ -61,20 +57,25 @@ if __name__ == "__main__":
     nn = NeuralNet(num_features, num_classifications, alpha)
 
     # Train the neural net on the training data
+    start_time = time.time()  # TODO: Possibly format time?
+    print("Starting Neural Net Training at time = ", start_time)
     nn.train(X_train, Y_train)
+    stop_time = time.time()
+    total_time = stop_time - start_time
+    print("Neural Net Training finished at time = ", stop_time, ", taking a total of ", total_time, " seconds")
 
     # Use the test data to predict classes to see how well the neural net classifies
     Y_train_predict = nn.predict(X_train)
     Y_test_predict = nn.predict(X_test)
 
     # TODO: Clean up after testing
-    print(Y_train)
-    print(Y_train_predict)
-    print(calculate_accuracy(Y_train, Y_train_predict))
+    # print(Y_train)
+    # print(Y_train_predict)
+    print("Neural Net Accuracy for Training Data: ", calculate_accuracy(Y_train, Y_train_predict))
 
-    print(Y_test)
-    print(Y_test_predict)
-    print(calculate_accuracy(Y_test, Y_test_predict))
+    # print(Y_test)
+    # print(Y_test_predict)
+    print("Neural Net Accuracy for Test Data: ", calculate_accuracy(Y_test, Y_test_predict))
 
 
 
