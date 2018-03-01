@@ -92,10 +92,8 @@ class dataSet(list):
         for i in range(1,len(self)):
             d = self[i]
             for j in range(len(d)-1):
-                if d[j]>self.max[j]:
-                    self.max[j] = d[j]
-                elif d[j]<self.min[j]:
-                    self.min[j] = d[j]
+                if d[j]>self.max[j]: self.max[j] = d[j]
+                elif d[j]<self.min[j]: self.min[j] = d[j]
                 self.mean[j]+=d[j]
         for j in range(len(self[0])-1):
             self.mean[j]/=len(self)
@@ -163,12 +161,12 @@ class dataSet(list):
             return self.mut[val]
         return str(val)
 
-    def randSubSet(self,k=25):
+    def randSubSet(self,k=25,shhh=False):
         """returns a random sub set of size k from the data set"""
-        print("building sub set")
+        if not shhh: print("building sub set")
         if k>len(self):
-            print("attempting to devide set into a set smaller then original set" + \
-                " returning original set")
+            if not shhh: print("attempting to devide set into a set smaller " + \
+                "then original set returning original set")
             return self
         out = dataSet()
         out.header = self.header

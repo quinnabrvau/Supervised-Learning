@@ -10,7 +10,7 @@ from dataSet import dataSet, getIrisData, getWineData
 from data import data
 from math import sqrt
 
-NN=5 #MAX DEPTH
+NN=20 #MAX DEPTH
 MM=3 #MIN SIZE
 
 class DecisionTree(dataSet):
@@ -37,16 +37,15 @@ class DecisionTree(dataSet):
         return searchTreeF(self,d)
 
     def split(self,mD,mS,depth=0):
-        print(depth)
         self.i, self.v, groups, score = self.getSplit()
-        #print(len(groups),groups[0],groups[1])
+        if groups==None:
+            return
         self.lt, self.gt = groups[0], groups[1]
+        self.lt.atr.append(self.i)
+        self.gt.atr.append(self.i)
         if self.lt==None or self.gt==None:
-            print("NULL")
             self.lt = self.gt = self.mostCommon()
             return
-        if depth>mD:
-            print("MAX DEPTH")
         if len(self.lt) <= mS or depth>mD:
             if len(self.lt)==0: self.lt=self.mostCommon()
             else: self.lt=self.lt.mostCommon()
@@ -58,10 +57,10 @@ class DecisionTree(dataSet):
         else:
             self.gt.split(mD,mS,depth+1)
 
-    def buildTree(self):
-        print("building tree:")
-        self.split(NN,MM)
-        print("tree built")
+    def buildTree(self,mD=NN,mS=MM,shhh=False):
+        if not shhh: print("building tree:")
+        self.split(mD,mS)
+        if not shhh: print("tree built")
 
     def giniIndex(self,groups):
         n = sum([len(g) for g in groups])
@@ -78,8 +77,7 @@ class DecisionTree(dataSet):
     def getSplit(self):
         b_index, b_value, b_score, b_groups = 999, 999, 999, None
         for j in range(len(self[0])-1):
-            if j in self.atr:
-                continue
+            if self.atr.count(j) > 2: continue
             for i in range(len(self)):
                 groups = self.splitAttribute(j,self[i][j]) # lit, big
                 gini = self.giniIndex(groups)
@@ -88,7 +86,7 @@ class DecisionTree(dataSet):
         return b_index, b_value, b_groups, b_score
 
     def splitAttribute(self,atr,divider=0.5):
-        big, lit = DecisionTree(), DecisionTree()
+        big, lit = DecisionTree(None,self.atr), DecisionTree(None,self.atr)
         for d in self:
             if d[atr] > divider: big.append(d)
             else:                lit.append(d)
@@ -101,7 +99,7 @@ class DecisionTree(dataSet):
 
 def printTreeF(node,n,root):
     if isinstance(node,DecisionTree):
-        print(".."*n,"[atr ",node.i," < ",node.v,"]",sep='')
+        print(".."*n,"[atr ",node.i," < ","%.2f" % node.v,"]",sep='')
         printTreeF(node.lt,n+1,root)
         printTreeF(node.gt,n+1,root)
     else:
@@ -115,7 +113,6 @@ def searchTreeF(node,d):
             return searchTreeF(node.gt,d)
     else:
         return node
-    
 
 if __name__=="__main__":
     # f = "wine"
@@ -147,28 +144,28 @@ if __name__=="__main__":
     # # print(dS.std)
     # dS.normStd(mean,std)
     # dS.strings2Ints(tree.mut)
-    #train, test, valid = getIrisData()
-    train, test, valid = getWineData()
+    #train, test, valid = getIrisData(1)
+    train, test, valid = getWineData(1)
     e = 99999
-    for i in range(1):
-        tree = DecisionTree(train.randSubSet(200))
+    for i in range(4):
+        tree = DecisionTree(train.randSubSet(400))
         tree.buildTree()
         # print(tree)
         # print(tree.mut)
-        tree.printTree()
+        # tree.printTree()
         # print(dS)
         errorE = 0
         successE = 0
         for d in test:
             r = tree.searchTree(d)
-            print("guess:",r,"actual:",d.classifier())
+            #print("guess:",r,"actual:",d.classifier())
             if r==d.classifier():
                 successE+=1
             else:
                 errorE+=1
-            print("success:",successE,"error:",errorE,"acuracy:", ("%.2f" % (100*(successE/(errorE+successE)))) +"%"  )
         if errorE < e:
             e = errorE
+        print("success:",successE,"error:",errorE,"acuracy:", ("%.2f" % (100*(successE/(errorE+successE)))) +"%"  )
     print("best error",e)
 
 

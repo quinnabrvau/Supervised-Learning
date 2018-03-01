@@ -45,7 +45,7 @@ class data(list):
     
     def attributes(self):
         """returns a copy of the attributes of the data"""
-        return [ i for i in self[:len(self)-1] ]
+        return [ i for i in self[0:-1] ]
     
     def classifier(self):
         """returns the classifier of the data"""
