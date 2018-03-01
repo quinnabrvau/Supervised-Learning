@@ -130,7 +130,7 @@ class dataSet(list):
                 self[i][j] /= std[j]
         self.findMinMax()
 
-    def devide(self,split):
+    def divide(self,split):
         for i in range(len(self)):
             for j in range(len(self[i])-1):
                 if self[i][j]>split:
@@ -159,7 +159,9 @@ class dataSet(list):
         self.findClasses()
 
     def getString(self,val):
-        return self.mut[val]
+        if val in self.mut.keys():
+            return self.mut[val]
+        return str(val)
 
     def randSubSet(self,k=25):
         """returns a random sub set of size k from the data set"""
@@ -176,20 +178,6 @@ class dataSet(list):
         out.findClasses()
         out.mut = self.mut
         return out
-
-    def splitAttribute(self,atr,divider=0.5):
-        big = dataSet()
-        lit = dataSet()
-        for i in range(len(self)):
-            if self[i][atr] > divider:
-                big.append(self[i])
-            else:
-                lit.append(self[i])
-        big.header = self.header
-        big.mut = self.mut
-        lit.header = self.header
-        lit.mut = self.mut
-        return [big, lit]
 
 def getIrisData(normalize=0):
     """returns the iris training, testing and validating data and normalized if normalize==True"""
@@ -239,7 +227,7 @@ if __name__=="__main__":
     new_dS = dS.randSubSet(25)
     new_dS.normStd()
     print(new_dS)
-    new_dS.devide(0)
+    new_dS.divide(0)
     print(new_dS)
 
     for s in getIrisData(2):
