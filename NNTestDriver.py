@@ -30,8 +30,8 @@ if __name__ == "__main__":
     # Get training, testing, and validation data
     # and put into ndarray format
 
-    #train, test, valid = getIrisData(1)
-    #num_classifications = 3  # TODO: Fix this to call from data (add dataSet method?)
+    # train, test, valid = getIrisData(1)
+    # num_classifications = 3  # TODO: Fix this to call from data (add dataSet method?)
 
     train, test, valid = getWineData(1)
     num_classifications = 13
@@ -59,14 +59,14 @@ if __name__ == "__main__":
     # Train the neural net on the training data
     start_time = time.time()  # TODO: Possibly format time?
     print("Starting Neural Net Training at time = ", start_time)
-    nn.train(X_train, Y_train)
+    nn.train(X_train, Y_train, X_valid, Y_valid)
     stop_time = time.time()
     total_time = stop_time - start_time
     print("Neural Net Training finished at time = ", stop_time, ", taking a total of ", total_time, " seconds")
 
     # Use the test data to predict classes to see how well the neural net classifies
-    Y_train_predict = nn.predict(X_train)
-    Y_test_predict = nn.predict(X_test)
+    Y_train_predict, train_loss = nn.predict(X_train, Y_train)
+    Y_test_predict, test_loss = nn.predict(X_test, Y_test)
 
     # TODO: Clean up after testing
     # print(Y_train)
