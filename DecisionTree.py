@@ -9,6 +9,7 @@ reference: https://machinelearningmastery.com/implement-decision-tree-algorithm-
 from dataSet import dataSet, getIrisData, getWineData
 from data import data
 from math import sqrt
+from random import randint
 
 NN=20 #MAX DEPTH
 MM=3 #MIN SIZE
@@ -41,8 +42,10 @@ class DecisionTree(dataSet):
         if groups==None:
             return
         self.lt, self.gt = groups[0], groups[1]
-        self.lt.atr.append(self.i)
-        self.gt.atr.append(self.i)
+        self.lt.atr.append((self.i,"%.1f"%self.v))
+        self.gt.atr.append((self.i,"%.1f"%self.v))
+        self.gt.header, self.gt.mut = self.header, self.mut
+        self.lt.header, self.lt.mut = self.header, self.mut
         if self.lt==None or self.gt==None:
             self.lt = self.gt = self.mostCommon()
             return
@@ -78,11 +81,10 @@ class DecisionTree(dataSet):
     def getSplit(self):
         b_index, b_value, b_score, b_groups = 999, 999, 999, None
         for j in range(len(self[0])-1):
-            if self.atr.count(j) > 2: continue
             for i in range(len(self)):
                 groups = self.splitAttribute(j,self[i][j]) # lit, big
                 gini = self.giniIndex(groups)
-                if gini < b_score:
+                if gini < b_score and (j,"%.1f"%self[i][j]) not in self.atr:
                     b_index, b_value, b_score, b_groups = j, self[i][j], gini, groups
         return b_index, b_value, b_groups, b_score
 
@@ -91,13 +93,13 @@ class DecisionTree(dataSet):
         for d in self:
             if d[atr] > divider: big.append(d)
             else:                lit.append(d)
-        big.header, big.mut = self.header, self.mut
-        lit.header, lit.mut = self.header, self.mut
         return lit, big
 
     def printTree(self):
         printTreeF(self,0,self)
 
+    def testTree(self,valid):
+        return testTreeF(self,valid)
 
     #####Random Forest Variations of normal Tree Functions
     def buildTreeFor(self,mD=NN,mS=MM,attributes=[0],shhh=False):
@@ -110,8 +112,10 @@ class DecisionTree(dataSet):
         if groups==None:
             return
         self.lt, self.gt = groups[0], groups[1]
-        self.lt.atr.append(self.i)
-        self.gt.atr.append(self.i)
+        self.lt.atr.append((self.i,"%.1f"%self.v))
+        self.gt.atr.append((self.i,"%.1f"%self.v))
+        self.gt.header, self.gt.mut = self.header, self.mut
+        self.lt.header, self.lt.mut = self.header, self.mut
         if self.lt==None or self.gt==None:
             self.lt = self.gt = self.mostCommon()
             return
@@ -133,7 +137,7 @@ class DecisionTree(dataSet):
             for i in range(len(self)):
                 groups = self.splitAttribute(j,self[i][j]) # lit, big
                 gini = self.giniIndex(groups)
-                if gini < b_score:
+                if gini < b_score and (j,"%.1f"%self[i][j]) not in self.atr:
                     b_index, b_value, b_score, b_groups = j, self[i][j], gini, groups
         return b_index, b_value, b_groups, b_score
 
@@ -154,6 +158,47 @@ def searchTreeF(node,d):
             return searchTreeF(node.gt,d)
     else:
         return node
+
+def testTreeF(node,test):
+    total = len(test)
+    success = 0
+    for d in test:
+        i = searchTreeF(node,d)
+        if i==d[-1]:
+            success+=1
+    return success/total
+
+def findApproxDepth(train,valid):
+    print("Building a random set of small trees to geuss the max depth and min set size values")
+    res = []
+    tree = DecisionTree(train.randSubSet(120,True))
+    r = 20
+    s = 3
+    for i in range(s,r+s):
+        depth = i+1 # depth = randint(2,(len(train[0])-1)*3)
+        for min_size in range(1,20):
+            # min_size = randint(2,(len(train[0])-1)*2)
+            tree.buildTree(depth,min_size,True)
+            acc = testTreeF(tree,valid)
+            res.append( [depth,min_size,acc] )
+        print( "%.2f"%(100*(i-s+1)/r) ,"percent done")
+    best = max(res,key=lambda r: r[-1])
+    res.sort(key=lambda r: r[-1])
+    for r in res:
+        print(r)
+    print("found a depth of",best[0],"and min size of",best[1])
+    return best
+
+def guessTreeOpt(train,test,valid):
+    best = findApproxDepth(train,valid)
+    tree = DecisionTree(train)
+    print("building tree from full set")
+    tree.buildTree(best[0],best[1],True)
+    print("tree built, testing tree")
+    acc = testTreeF(tree,test)
+    print("accuracy of:","%.2f"%(acc*100))
+    return tree
+
 
 if __name__=="__main__":
     # f = "wine"
@@ -185,29 +230,36 @@ if __name__=="__main__":
     # # print(dS.std)
     # dS.normStd(mean,std)
     # dS.strings2Ints(tree.mut)
-    #train, test, valid = getIrisData(1)
-    train, test, valid = getWineData(1)
-    e = 99999
-    for i in range(4):
-        tree = DecisionTree(train.randSubSet(400))
-        tree.buildTree()
-        # print(tree)
-        # print(tree.mut)
-        # tree.printTree()
-        # print(dS)
-        errorE = 0
-        successE = 0
-        for d in test:
-            r = tree.searchTree(d)
-            #print("guess:",r,"actual:",d.classifier())
-            if r==d.classifier():
-                successE+=1
-            else:
-                errorE+=1
-        if errorE < e:
-            e = errorE
-        print("success:",successE,"error:",errorE,"acuracy:", ("%.2f" % (100*(successE/(errorE+successE)))) +"%"  )
-    print("best error",e)
+    # train, test, valid = getWineData(1)
+    train, test, valid = getIrisData(1)
+    # tree = guessTreeOpt(train, test, valid)
+    tree = guessTreeOpt(train, test, valid)
+
+
+
+
+
+    # e = 99999
+    # for i in range(1):
+    #     tree = DecisionTree(train.randSubSet(400))
+    #     tree.buildTree()
+    #     # print(tree)
+    #     # print(tree.mut)
+    #     tree.printTree()
+    #     # print(dS)
+    #     errorE = 0
+    #     successE = 0
+    #     for d in test:
+    #         r = tree.searchTree(d)
+    #         #print("guess:",r,"actual:",d.classifier())
+    #         if r==d.classifier():
+    #             successE+=1
+    #         else:
+    #             errorE+=1
+    #     if errorE < e:
+    #         e = errorE
+    #     print("success:",successE,"error:",errorE,"accuracy:", ("%.2f" % (100*(successE/(errorE+successE)))) +"%"  )
+    # print("best error",e)
 
 
 
