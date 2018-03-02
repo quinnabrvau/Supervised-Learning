@@ -140,8 +140,9 @@ class dataSet(list):
     def strings2Ints(self,mut=None):
         if mut!=None:
             self.mut = mut
+        else:
+            self.mut = {}
         k = 0
-        self.mut = {}
         for i in range(len(self)):
             for j in range(len(self[i])):
                 if isinstance(self[i][j],str):
@@ -228,10 +229,12 @@ if __name__=="__main__":
     new_dS.divide(0)
     print(new_dS)
 
-    for s in getIrisData(2):
-        print(s)
-    for s in getWineData():
-        print(s)
+    dS = getIrisData(2)
+    # for s in dS:
+    #     print(s)
+    print(dS[0].mut,dS[1].mut,dS[2].mut,sep="\n")
+    # for s in getWineData():
+    #     print(s)
 
 
     
