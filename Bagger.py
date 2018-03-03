@@ -9,12 +9,16 @@ Created on Fir Mar 2 12:30:18 2018
 from dataSet import dataSet, getIrisData, getWineData
 from data import data
 from RandomForest import RandomForest
+from Report import Report
 from math import sqrt,ceil
 from random import sample, randint
 import numpy as np
+from time import time
 
 class Bagger:
-    def __init__(self,searcher,train,test,valid,shrink=True):
+    def __init__(self,searcher,train,test,valid,shrink=True,Report=None):
+        if Report != None: self.REPORT=Report
+        else: self.REPORT={} 
         if not shrink:
             self.C = searcher(train,test,valid)
             print(self.C)
@@ -54,7 +58,7 @@ class Bagger:
         return self.C.params()
 
     def build(self,params):
-        self.C.build(params)
+        self.C.build(params,self.REPORT)
 
     def predict(self):
         return self.C.predict()
@@ -64,46 +68,54 @@ class Bagger:
 
 
 class BaggerList(list):
-    def __init__(self,searcher,ty="iris",size=100):
+    def __init__(self,searcher,ty="iris",size=100,Report=None):
+        start = time()
+        if Report != None: self.REPORT=Report
+        else: self.REPORT={}
         list.__init__(self)
-        if   ty=='iris': self.train, self.test, self.valid = getIrisData(1)
-        elif ty=='wine': self.train, self.test, self.valid = getWineData(1)
+        if   ty=='iris' or ty=='i': self.train, self.test, self.valid = getIrisData(1)
+        elif ty=='wine' or ty=='w': self.train, self.test, self.valid = getWineData(1)
+        self.REPORT['datasetTrainSize']=str(len(self.train))
+        self.REPORT['datasetTestSize']=str(len(self.test))
+        self.REPORT['datasetValidSize']=str(len(self.valid))
         self.C = searcher
         for i in range(size):
-            self.append(Bagger(self.C,self.train,self.test,self.valid,size==1))
+            self.append(Bagger(self.C,self.train,self.test,self.valid,size!=1,Report))
+        self.REPORT['openTime'] = "%.4f" % ((time()-start))
 
     
     def build(self):
+        start = time()
         params = self[0].params()
         r = len(self)
-        if r>1:print("building a set of operators for boosting")
-        else: print("building an operator")
+        if r>1:print("building a set of agents for boosting")
+        else: print("building an agent")
         for i in range(r):
             self[i].build(params)
-            if len(self.C)>1:print( "%.2f"%(100*(i+1)/r) ,"percent done")
-            else: print("operator built")
+            if len(self)>1:print( "%.2f"%(100*(i+1)/r) ,"percent done")
+        if len(self)>1:print("agents built")
+        else:   print("agent built")
+        self.REPORT['buildTime'] = "%.4f" % ((time()-start))
 
     def predict(self):
+        start = time()
         guess = []
         actual = []
         for i in range(len(self)):
             guess.append(self[i].predict())
         r = len(self.test)
         for i in range(r):
-            
             actual.append(self.test[i][-1])
         foo = np.asarray(guess)
         g = []
         for i in range(len(guess[0])):
             g.append(np.argmax(np.bincount(foo[:,i])))
-        # for gu in guess:
-        #     print("t",gu)
-        # print("g",g)
-        # print("a",actual)
         success = 0
         for i in range(len(g)):
             if g[i]==actual[i]:
                 success+=1
+        self.REPORT['predictTime'] = "%.4f" % ((time()-start))
+        self.REPORT['predictAccuracy'] = "%.3f" % (100*success/len(self.test))
         return success/len(self.test)
 
 

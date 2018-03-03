@@ -19,7 +19,10 @@ class RandomForest:
     def params(self):
         return findApproxDepth(self.train,self.valid)[:2]
 
-    def build(self,params=None):
+    def build(self,params=None,Report=None):
+        if Report!=None:
+            Report['treeDepth']  =str(params[0])
+            Report['treeMinSize']=str(params[1])
         mD = 4
         mS = 10
         if params != None:
