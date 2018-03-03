@@ -16,7 +16,13 @@ class RandomForest:
         self.tree = DecisionTree(train)
 
     def params(self,p=None):
-        return findApproxDepth(self.train,self.valid)[:2]
+        if p==None or p==(0,0) or len(p)<2:
+            p = findApproxDepth(self.train,self.valid)[:2]
+        elif p[0]==0:
+            p = (findApproxDepth(self.train,self.valid,0,p[1])[0],p[1])
+        elif p[1]==0:
+            p = (p[0],findApproxDepth(self.train,self.valid,p[0],p[1])[0])
+        return p[0:2]
 
     def build(self,params=None,rep=None):
         mD = 4

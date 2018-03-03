@@ -83,18 +83,20 @@ class BaggerList(list):
         self.REPORT['openTime'] = "%.4f" % ((time()-start))
 
     
-    def params(self,p):
+    def params(self,p=None):
         for i in(range(len(self))):
-            self[i].params(p)
+            x = self[i].params(p)
+            if x != None:
+                p = x
+        self.p = p
 
     def build(self):
         start = time()
-        params = self[0].params()
         r = len(self)
         if r>1:print("building a set of agents for boosting")
         else: print("building an agent")
         for i in range(r):
-            self[i].build(params)
+            self[i].build(self.p)
             if len(self)>1:print( "%.2f"%(100*(i+1)/r) ,"percent done")
         if len(self)>1:print("agents built")
         else:   print("agent built")

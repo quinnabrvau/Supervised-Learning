@@ -28,6 +28,7 @@ REPORT = Report()
 
 
 def main_menu():
+    global DATASET, AGENT, BAGSIZE, BAGGING, REPORT
     print("""
     --------------------------------------------------------------------------
 
@@ -197,6 +198,47 @@ def bagging_menu():
         except:
             print("That's not a valid number.")
 
+def tree_menu():
+    menu_message = """\nTree's are usually built to a specific depth, please provide
+                      \t a depth to be used. If 0 is provided, the tree will try and 
+                      \t find a near optimal depth to use.
+                      Choose an integer >= 0: """
+    depth = ""
+    while (True):
+        depth = input(menu_message).lower()
+        try:
+            depth = int(depth)
+            if depth >= 1:
+                break
+            elif depth == 0:
+                print("The system will try and find a near optimal depth")
+                break
+            else:
+                print("Please choose a positive number >= 0.")
+        except:
+            print("That's not a valid number.")
+
+    menu_message = """\nA node in the tree is considered a leaf if it is at the max
+                      \t depth or if it has a minimum number of elements. Please
+                      \t provide the number of elements that will define a minimume
+                      \t size. If 0 is provided, the tree will attempt to fine
+                      \t a near optimal size
+                      Choose an integer >= 0: """
+    size = ""
+    while (True):
+        size = input(menu_message).lower()
+        try:
+            size = int(size)
+            if size > 1:
+                break
+            elif size == 0:
+                print("The system will try and find a near optimal depth")
+                break
+            else:
+                print("Please choose a positive number >= 0.")
+        except:
+            print("That's not a valid number.")
+    return depth, size
 
 def run_from_menu():
     global DATASET,AGENT,BAGGING,BAGSIZE,REPORT
@@ -214,6 +256,7 @@ def run_from_menu():
     if AGENT == 't':
         REPORT['agent']="Decision Tree"
         BL = BaggerList(RandomForest,DATASET,BAGSIZE,REPORT)
+        BL.params( tree_menu() )
     elif AGENT == 'n':
         REPORT['agent']="Neural Network"
         BL = BaggerList(NNTestDriver,DATASET,BAGSIZE,REPORT)
@@ -224,8 +267,7 @@ def run_from_menu():
     BL.build()
     BL.predict()
 
-def tree_menu():
-    print("Add in whatever parameters users can choose here")
+
 
 if __name__ == "__main__":
     main_menu()

@@ -128,15 +128,23 @@ def testTreeF(node,test):
             success+=1
     return success/total
 
-def findApproxDepth(train,valid):
+def findApproxDepth(train,valid,mD = 0,mS = 0):
     print("Building a random set of small trees to geuss the max depth and min set size values")
     res = []
     tree = DecisionTree(train.randSubSet(120,True))
     r = 10
     s = 3
+    if mD!=0:
+        s=mD-1
+        r=1
     for i in range(s,r+s,):
         depth = i+1 # depth = randint(2,(len(train[0])-1)*3)
-        for min_size in range(2,15,2):
+        a = 2
+        b = 15
+        if mS!=0:
+            a=mS
+            b=mS+1
+        for min_size in range(a,b,2):
             # min_size = randint(2,(len(train[0])-1)*2)
             tree.buildTree(depth,min_size,True)
             acc = testTreeF(tree,valid)
@@ -150,7 +158,7 @@ def findApproxDepth(train,valid):
     return best
 
 def guessTreeOpt(train,test,valid):
-    best = findApproxDepth(train,valid)
+    best = findApproxDepth(train,valid,5,5)
     tree = DecisionTree(train)
     print("building tree from full set")
     tree.buildTree(best[0],best[1],True)
