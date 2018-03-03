@@ -81,8 +81,6 @@ def agent_menu():
           \t and trains by running multiple epochs where it updates the weights
           \t and activations for each layer
           Quit (type 'q') """
-    letter_choice = ''
-    continue_menu = True
 
     while(continue_menu):
         letter_choice = input(menu_message).lower()

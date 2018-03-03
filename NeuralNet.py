@@ -67,8 +67,9 @@ class NeuralNet:
             # if our delta for training loss is too small or our delta for validation loss too big
             # stop training since we aren't gaining much
             if epoch > min_epochs and (train_loss_delta < train_loss_epsilon or valid_loss_delta < valid_loss_epsilon):
-                print("TESTING: stopped training at epoch: ", epoch)  # TODO: Delete
-                break  # stop running
+                # print("TESTING: stopped training at epoch: ", epoch)  # TODO: Delete
+                # break  # stop running
+                return epoch
 
 
     def _train_single_epoch(self, X, one_hot_encodings):

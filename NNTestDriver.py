@@ -44,16 +44,18 @@ class NNTestDriver:
 
         num_train_samples, num_features = self.X_train.shape
         alpha = 10e-5  # learning rate
-        num_classifications = len(train.classes)
-        self.NN = NeuralNet(num_features, num_classifications + 3, alpha)  # TODO: Fix the num_classi
+        num_classifications = max(train.classes)
+        self.NN = NeuralNet(num_features, num_classifications, alpha)
 
-    def build(self):
-        start_time = time.time()  # TODO: Possibly format time?
-        print("Starting Neural Net Training at time = ", start_time)
-        self.NN.train(self.X_train, self.Y_train, self.X_valid, self.Y_valid)
-        stop_time = time.time()
-        total_time = stop_time - start_time
-        print("Neural Net Training finished at time = ", stop_time, ", taking a total of ", time.time()-start_time, " seconds")
+    def build(self,params=None,Report=None):
+        # start_time = time.time()  # TODO: Possibly format time?
+        # print("Starting Neural Net Training at time = ", start_time)
+        epoch = self.NN.train(self.X_train, self.Y_train, self.X_valid, self.Y_valid)
+        if Report != None:
+            Report['netTrainCycle']=str(epoch)
+        # stop_time = time.time()
+        # total_time = stop_time - start_time
+        # print("Neural Net Training finished at time = ", stop_time, ", taking a total of ", time.time()-start_time, " seconds")
 
     def predict(self):
         Y_test_predict, test_loss = self.NN.predict(self.X_test, self.Y_test)
