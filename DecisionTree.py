@@ -101,46 +101,6 @@ class DecisionTree(dataSet):
     def testTree(self,valid):
         return testTreeF(self,valid)
 
-    #####Random Forest Variations of normal Tree Functions
-    def buildTreeFor(self,mD=NN,mS=MM,attributes=[0],shhh=False):
-        if not shhh: print("building tree:")
-        self.splitFor(mD,mS,attributes)
-        if not shhh: print("tree built")
-
-    def splitFor(self,mD,mS,attributes,depth=0):
-        self.i, self.v, groups, score = self.getSplitFor(attributes)
-        if groups==None:
-            return
-        self.lt, self.gt = groups[0], groups[1]
-        self.lt.atr.append((self.i,"%.1f"%self.v))
-        self.gt.atr.append((self.i,"%.1f"%self.v))
-        self.gt.header, self.gt.mut = self.header, self.mut
-        self.lt.header, self.lt.mut = self.header, self.mut
-        if self.lt==None or self.gt==None:
-            self.lt = self.gt = self.mostCommon()
-            return
-        if len(self.lt) <= mS or depth>mD:
-            if len(self.lt)==0: self.lt=self.mostCommon()
-            else: self.lt=self.lt.mostCommon()
-        else:
-            self.lt.splitFor(mD,mS,attributes,depth+1)
-        if len(self.gt) <= mS or depth>mD:
-            if len(self.gt)==0: self.gt=self.mostCommon()
-            else: self.gt=self.gt.mostCommon()
-        else:
-            self.gt.splitFor(mD,mS,attributes,depth+1)
-
-    def getSplitFor(self,attributes):
-        b_index, b_value, b_score, b_groups = 999, 999, 999, None
-        for j in attributes:
-            if self.atr.count(j) > 2: continue
-            for i in range(len(self)):
-                groups = self.splitAttribute(j,self[i][j]) # lit, big
-                gini = self.giniIndex(groups)
-                if gini < b_score and (j,"%.1f"%self[i][j]) not in self.atr:
-                    b_index, b_value, b_score, b_groups = j, self[i][j], gini, groups
-        return b_index, b_value, b_groups, b_score
-
 def printTreeF(node,n,root):
     if isinstance(node,DecisionTree):
         print(".."*n,"[atr ",node.i," < ","%.2f" % node.v,"]",sep='')
@@ -172,20 +132,20 @@ def findApproxDepth(train,valid):
     print("Building a random set of small trees to geuss the max depth and min set size values")
     res = []
     tree = DecisionTree(train.randSubSet(120,True))
-    r = 20
+    r = 10
     s = 3
-    for i in range(s,r+s):
+    for i in range(s,r+s,):
         depth = i+1 # depth = randint(2,(len(train[0])-1)*3)
-        for min_size in range(1,20):
+        for min_size in range(2,15,2):
             # min_size = randint(2,(len(train[0])-1)*2)
             tree.buildTree(depth,min_size,True)
             acc = testTreeF(tree,valid)
             res.append( [depth,min_size,acc] )
         print( "%.2f"%(100*(i-s+1)/r) ,"percent done")
     best = max(res,key=lambda r: r[-1])
-    res.sort(key=lambda r: r[-1])
-    for r in res:
-        print(r)
+    # res.sort(key=lambda r: r[-1])
+    # for r in res:
+    #     print(r)
     print("found a depth of",best[0],"and min size of",best[1])
     return best
 

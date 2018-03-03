@@ -11,61 +11,43 @@ from DecisionTree import DecisionTree, findApproxDepth
 from random import sample, randint
 from math import sqrt,ceil
 
-class RandomForest(list):
-    def __init__(self,ty="iris",le=80,s=None):
-        self.train, self.test, self.valid = None,None,None
-        if   ty=='iris': self.train, self.test, self.valid = getIrisData(1)
-        elif ty=='wine': self.train, self.test, self.valid = getWineData(1)
-        if s==None: s=int(len(self.train)*10/le)
-        self.sub_size = s
-        self.le = le
-        print("size of sub sets",self.sub_size)
-        list.__init__( self )        
-        self.buildForest()
+class RandomForest:
+    def __init__(self,train,test,valid):
+        self.train,self.test,self.valid = train,test,valid
+        self.tree = DecisionTree(train)
 
-    def buildForest(self):
-        print("building forests")
-        attributes = [i for i in range(len(self.train[0])-1)]
-        foo = ceil(sqrt(len(attributes))) #number of attributes to use
-        mD,mS,a = findApproxDepth(self.train,self.valid)
-        while (len(self)<self.le):
-            tree = (DecisionTree(self.train.randSubSet(self.sub_size,True)))
-            atr = sample(attributes,foo)
-            # mD = randint(2,(len(self.train[0])-1)*3)
-            # mS = randint(2,(len(self.train[0])-1)*2)
-            tree.buildTreeFor(mD,mS,atr,True)
-            if tree.testTree(self.train)>0.50:
-                self.append(tree)
-                print( "%.2f" % (100*len(self)/self.le),"percent built")
-        print("forest built")
+    def params(self):
+        return findApproxDepth(self.train,self.valid)[:2]
 
-    def searchForest(self,d,shhh=False):
-        p = []
-        if not shhh: print("searching forest")
-        for i in range(len(self)):
-            # if i%int(le/10)==0:print( "%.2" % 100*i/le , "%  searcherd",sep="")
+    def build(self,params=None):
+        mD = 4
+        mS = 10
+        if params != None:
+            mD = params[0]
+            mS = params[1]
+        self.tree.buildTree(mD,mS,True)
 
-            p.append(self[i].searchTree(d))
-        if not shhh: print("search complete")
-        return max(set(p),key=p.count )
-
-    def testForest(self):
-        total,success = 0,0
+    def predict(self):
+        out = []
         for d in self.test:
-            r = self.searchForest(d,True)
-            if r==d.classifier():
-                success+=1
-            total+=1
-        return success/total
+            out.append(self.tree.searchTree(d))
+        return out
 
-    def getString(self,r):
-        return self.train.getString(r)
+    def __str__(self):
+        return str(self.tree)
+
 
 
 if __name__=="__main__":
-    rf = RandomForest('iris',400,200)
-    acc = rf.testForest()
-    print("acuracy:", ("%.2f" % (100*acc)) +"%"  )
+    # train, test, valid = getWineData(1)
+    train, test, valid = getIrisData(1)
+    rf = RandomForest(train,test,valid)
+    params = rf.params()
+    print(params)
+    rf.build(params)
+    acc = rf.predict()
+    print(acc)
+    #print("acuracy:", ("%.2f" % (100*acc)) +"%"  )
         
 
 

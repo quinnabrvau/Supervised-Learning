@@ -178,6 +178,16 @@ class dataSet(list):
         out.mut = self.mut
         return out
 
+    def subSet(self,atr):
+        out = dataSet()
+        for d in self:
+            d_ = data()
+            for i in atr:
+                d_.append(d[i])
+            d_.append(d.classifier())
+            out.append(d_)
+        return out
+
 def getIrisData(normalize=0):
     """returns the iris training, testing and validating data and normalized if normalize==True"""
     out = getData("iris",normalize)
