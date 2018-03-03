@@ -52,14 +52,6 @@ class NNTestDriver:
         epoch = self.NN.train(self.X_train, self.Y_train, self.X_valid, self.Y_valid)
         if Report != None:
             Report['netTrainCycle']=str(epoch)
-            Report['netAlpha']=str(self.NN.alpha)
-            if self.NN.decay=='y':
-                Report['netAlpha']+=" with a decay"
-            Report['netLayers']=str(self.NN.layers)
-            if self.NN.activation=='t':
-                Report['netActivation']="hyperbolic tangent"
-            elif self.NN.activation='s':
-                Report['netActivation']="sigmoid"
         # stop_time = time.time()
         # total_time = stop_time - start_time
         # print("Neural Net Training finished at time = ", stop_time, ", taking a total of ", time.time()-start_time, " seconds")

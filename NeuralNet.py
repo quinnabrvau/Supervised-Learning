@@ -46,7 +46,6 @@ class NeuralNet:
         # where each row represents a sample, and each column represents a classification
         # and each row gets a 1 in the column that matches its classification
         one_hot_encodings = np.zeros((Y_train.shape[0], self.num_classifications))  # initialize to all zeros
-        print(self.num_classifications,Y_train.shape[0])
         for i in range(Y_train.shape[0]):
             one_hot_encodings[i, Y_train[i]] = 1
 

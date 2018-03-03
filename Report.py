@@ -44,6 +44,8 @@ class Report(dict):
             "It took XXXX seconds to train the agent(s)",
             "predictTime":
             "It took XXXX seconds to predict the test set",
+            "totalTime":
+            "It took XXXX seconds to run the program",
             "predictAccuracy":
             "The prediction accurately guessed XXXX%  of the test data",
             #Tree Specific Data Types
@@ -55,10 +57,12 @@ class Report(dict):
             #Nueral Net Specific Data Types
             "netTrainCycle":
             "The nueral net performed XXXX training cycles",
-            "netAlpha": "The nueral net used an alpha of XXXX",
-            "netLayers": "The nueral net was made of XXXX layers",
-            "netActivation": "The nueral net used an XXXX function for the activation function",
-
+            "netAlpha":
+            "The nueral net used an alpha of XXXX",
+            "netLayers":
+            "The nueral net was made of XXXX layers",
+            "netActivation":
+            "The nueral net used an XXXX function for the activation function",
         }
         self.order = [
             "dataset",
@@ -70,6 +74,7 @@ class Report(dict):
             "openTime",
             "buildTime",
             "predictTime",
+            "totalTime",
             "predictAccuracy",
             #Tree Specific Data Types
             "treeDepth",

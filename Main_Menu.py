@@ -12,6 +12,7 @@ from Bagger import BaggerList
 from RandomForest import RandomForest
 from NNTestDriver import NNTestDriver
 from Report import Report
+from time import time
 
 # Welcome screen & description of program
 # loop until quit
@@ -45,7 +46,9 @@ def main_menu():
     if AGENT=='q':return
     bagging_menu()
     if BAGGING=='q' or BAGSIZE=='q':return
+    start = time()
     run_from_menu()
+    REPORT['totalTime'] = "%.4f" % ((time() - start))
     print(REPORT)
 
 
@@ -159,6 +162,16 @@ def net_menu():
             break
         else:
             print("That's not a valid option. \n")
+
+    REPORT['netAlpha']=str(alpha)
+    if decay=='y':
+        REPORT['netAlpha']+=" with a decay"
+    REPORT['netLayers']=str(layers)
+    if activation=='t':
+        REPORT['netActivation']="hyperbolic tangent"
+    elif activation=='s':
+        REPORT['netActivation']="sigmoid"
+
     return layers,activation,alpha,decay
 
 
@@ -265,7 +278,9 @@ def run_from_menu():
         print("Something went wrong, exiting ...")
         return
     BL.build()
+    print("testing agent")
     BL.predict()
+    print("test complete")
 
 
 
