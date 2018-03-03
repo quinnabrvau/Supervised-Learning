@@ -8,7 +8,6 @@ Test Driver to use in testing our learning agents
 """
 
 import numpy as np
-from dataSet import dataSet, getIrisData, getWineData
 from NeuralNet import NeuralNet
 import time
 
@@ -45,7 +44,7 @@ class NNTestDriver:
         num_train_samples, num_features = self.X_train.shape
         alpha = 10e-5  # learning rate
         num_classifications = max(train.classes)
-        self.NN = NeuralNet(num_features, num_classifications, alpha)
+        self.NN = NeuralNet(num_features, num_classifications+1, alpha)
 
     def build(self,params=None,Report=None):
         # start_time = time.time()  # TODO: Possibly format time?
@@ -61,7 +60,12 @@ class NNTestDriver:
         Y_test_predict, test_loss = self.NN.predict(self.X_test, self.Y_test)
         return Y_test_predict
 
-    def params(self):
+    def params(self,p=None):
+        if p!=None:
+            self.NN.alpha = p[2]
+            self.NN.activation = p[1]
+            self.NN.layers = p[0]
+            self.NN.deacy = p[3]
         return None
 
 

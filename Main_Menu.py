@@ -71,7 +71,6 @@ def dataset_menu():
 
 def agent_menu():
     global AGENT
-    # TODO: add description of the decision tree
     menu_message = """\nChoose which learning agent to use: 
           Decision Tree (type 't')
           \t This learning agent builds a binary decision tree of semi-optimum 
@@ -82,22 +81,18 @@ def agent_menu():
           \t and activations for each layer
           Quit (type 'q') """
 
-    while(continue_menu):
-        letter_choice = input(menu_message).lower()
-        if letter_choice == 't':
-            AGENT = 'tree'
-            continue_menu = False
-        elif letter_choice == 'n':
-            AGENT = 'net'
-            continue_menu = False
-        elif letter_choice == 'q':
-            continue_menu = False
+    while(True):
+        AGENT = input(menu_message).lower()
+        if AGENT == 't':
+            break
+        elif AGENT == 'n':
+            break
+        elif AGENT == 'q':
+            break
         else:
             print("That's not a valid option.")
 
 def net_menu():
-    # TODO: add more description of bagging
-    bagging_message = """\nDo you want to use bagging (which can improve performance)? (type 'y' or 'n'):"""
     hidden_layer_message = """\nHow many nodes do you want to use in the hidden layer? 
                     Typically, you use about 1-2x the number of nodes in your input layer.
                     The more nodes you have, the better the neural net can predict, 
@@ -123,17 +118,48 @@ def net_menu():
 
     letter_choice = ''
     continue_menu = True
-
+    layers = 2
+    activation = ''
+    alpha = 0.1
+    decay = ''
     while(continue_menu):
-        letter_choice = input(menu_message).lower()
-        if letter_choice == 't':
-            AGENT = 'tree'
+        letter_choice = input(hidden_layer_message).lower()
+        if letter_choice == '1':
+            layers = 1
             continue_menu = False
-        elif letter_choice == 'n':
-            AGENT = 'net'
+        elif letter_choice == '2':
             continue_menu = False
         else:
             print("That's not a valid option. \n")
+    continue_menu = True
+    while(continue_menu):
+        activation = input(activation_message).lower()
+        if activation=='s':
+            break
+        elif activation=='t':
+            break
+        else:
+            print("That's not a valid option. \n")
+    while(continue_menu):
+        alpha = input(alpha_start_message).lower()
+        try:
+            alpha = float(alpha)
+            if alpha < 0.1 and alpha > 0.00001:
+                break
+            else:
+                print("That's not a valid number.")
+        except:
+            print("That's not a valid number.")
+    while(continue_menu):
+        decay = input(alpha_decay_message).lower()
+        if decay=='y':
+            break
+        elif decay=='n':
+            break
+        else:
+            print("That's not a valid option. \n")
+    return layers,activation,alpha,decay
+
 
 def bagging_menu():
     global BAGGING, BAGSIZE
@@ -191,6 +217,7 @@ def run_from_menu():
     elif AGENT == 'n':
         REPORT['agent']="Neural Network"
         BL = BaggerList(NNTestDriver,DATASET,BAGSIZE,REPORT)
+        BL.params( net_menu() )
     else:
         print("Something went wrong, exiting ...")
         return

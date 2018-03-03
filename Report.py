@@ -63,5 +63,8 @@ class Report(dict):
                 out+=str(self[k])
         return out
 
+    def add(self,key,val):
+        self[key] = val
+
 
 

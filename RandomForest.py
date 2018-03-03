@@ -6,26 +6,25 @@ Created on Wed Feb 28 21:27:14 2018
 @author: quinn
 """
 
-from dataSet import dataSet, getIrisData, getWineData
+from dataSet import getIrisData, getWineData
 from DecisionTree import DecisionTree, findApproxDepth
-from random import sample, randint
-from math import sqrt,ceil
+from Report import Report
 
 class RandomForest:
     def __init__(self,train,test,valid):
         self.train,self.test,self.valid = train,test,valid
         self.tree = DecisionTree(train)
 
-    def params(self):
+    def params(self,p=None):
         return findApproxDepth(self.train,self.valid)[:2]
 
-    def build(self,params=None,Report=None):
-        if Report!=None:
-            Report['treeDepth']  =str(params[0])
-            Report['treeMinSize']=str(params[1])
+    def build(self,params=None,rep=None):
         mD = 4
         mS = 10
         if params != None:
+            if rep != None:
+                rep['treeDepth']   = params[0]
+                rep['treeMinSize'] = params[1]
             mD = params[0]
             mS = params[1]
         self.tree.buildTree(mD,mS,True)

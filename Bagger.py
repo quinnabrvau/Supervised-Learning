@@ -11,17 +11,16 @@ from data import data
 from RandomForest import RandomForest
 from Report import Report
 from math import sqrt,ceil
-from random import sample, randint
+from random import sample
 import numpy as np
 from time import time
 
 class Bagger:
-    def __init__(self,searcher,train,test,valid,shrink=True,Report=None):
-        if Report != None: self.REPORT=Report
+    def __init__(self,searcher,train,test,valid,shrink=True,report=None):
+        if report != None: self.REPORT=report
         else: self.REPORT={} 
         if not shrink:
             self.C = searcher(train,test,valid)
-            print(self.C)
             return
         foo = ceil(sqrt(len(train[0])-1))
         attributes = [i for i in range(len(train[0])-1)]
@@ -54,8 +53,8 @@ class Bagger:
         self.train.classes   = train.classes
         self.C = searcher(self.train,self.test,self.valid)
 
-    def params(self):
-        return self.C.params()
+    def params(self,p=None):
+        return self.C.params(p)
 
     def build(self,params):
         self.C.build(params,self.REPORT)
@@ -68,9 +67,9 @@ class Bagger:
 
 
 class BaggerList(list):
-    def __init__(self,searcher,ty="iris",size=100,Report=None):
+    def __init__(self,searcher,ty="iris",size=100,report=None):
         start = time()
-        if Report != None: self.REPORT=Report
+        if report != None: self.REPORT=report
         else: self.REPORT={}
         list.__init__(self)
         if   ty=='iris' or ty=='i': self.train, self.test, self.valid = getIrisData(1)
@@ -80,10 +79,14 @@ class BaggerList(list):
         self.REPORT['datasetValidSize']=str(len(self.valid))
         self.C = searcher
         for i in range(size):
-            self.append(Bagger(self.C,self.train,self.test,self.valid,size!=1,Report))
+            self.append(Bagger(self.C,self.train,self.test,self.valid,size!=1,report))
         self.REPORT['openTime'] = "%.4f" % ((time()-start))
 
     
+    def params(self,p):
+        for i in(range(len(self))):
+            self[i].params(p)
+
     def build(self):
         start = time()
         params = self[0].params()
