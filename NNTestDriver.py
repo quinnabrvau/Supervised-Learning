@@ -55,7 +55,7 @@ class NNTestDriver:
         total_time = stop_time - start_time
         print("Neural Net Training finished at time = ", stop_time, ", taking a total of ", time.time()-start_time, " seconds")
 
-    def test(self):
+    def predict(self):
         Y_test_predict, test_loss = self.NN.predict(self.X_test, self.Y_test)
         return Y_test_predict
 
@@ -70,4 +70,4 @@ if __name__ == "__main__":
 
     searcher = NNTestDriver(train,test,valid)
     searcher.build()
-    print(searcher.test())
+    print(searcher.predict())
