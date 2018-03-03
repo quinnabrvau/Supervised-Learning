@@ -41,8 +41,15 @@ class NNTestDriver:
         self.Y_valid = (valid_data[:, -1]).astype(int)
         self.Y_test  = (test_data[:, -1]).astype(int)
 
+        num_train_samples, num_features = self.X_train.shape
         alpha = 10e-5  # learning rate
-        self.NN = NeuralNet(len(train[0])-1, len(train.classes), alpha)
+        num_classifications = len(train.classes)
+        print("TESTING: num_classifications", num_classifications)
+        self.NN = NeuralNet(num_features, num_classifications, alpha)
+
+
+        # alpha = 10e-5  # learning rate
+        # self.NN = NeuralNet(len(train[0])-1, len(train.classes), alpha)
 
     def build(self):
         start_time = time.time()  # TODO: Possibly format time?

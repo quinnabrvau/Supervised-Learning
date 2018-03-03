@@ -1,4 +1,4 @@
-""""NeuralNet.py by Shannon Ladymon (UWNetID: sladymon)
+"""NeuralNet.py by Shannon Ladymon (UWNetID: sladymon)
 in partnership with Quinn Abrahams-Vaughn (UWNetID: abrahq)
 
 CSE 415 Winter 2018
@@ -43,6 +43,7 @@ class NeuralNet:
         # where each row represents a sample, and each column represents a classification
         # and each row gets a 1 in the column that matches its classification
         one_hot_encodings = np.zeros((Y_train.shape[0], self.num_classifications))  # initialize to all zeros
+        print("TESTING: Y_train_shape:", Y_train.shape)
         for i in range(Y_train.shape[0]):
             one_hot_encodings[i, Y_train[i]] = 1
 
