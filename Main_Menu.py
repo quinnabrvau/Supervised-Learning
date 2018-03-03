@@ -53,14 +53,14 @@ def main_menu():
 def dataset_menu():
     global DATASET
     menu_message = """\nChoose one of the following options for the data set: 
-          Fischer Iris Dataset (type 'i')
-          \t The Iris dataset contains 150 samples of 3 types of iris flowers
-          \t with data on 4 features (ex. petal width) for each sample
-          Red Wine Quality Dataset (type 'w')
-          \t The Wine dataset contains 1600 samples of red wine
-          \t classified into 6 classes of quality (ratings 3-8)
-          \t with data on 11 features (ex. residual sugar) for each sample
-          Quit (type 'q') """
+Fischer Iris Dataset (type 'i')
+\t The Iris dataset contains 150 samples of 3 types of iris flowers
+\t with data on 4 features (ex. petal width) for each sample
+Red Wine Quality Dataset (type 'w')
+\t The Wine dataset contains 1600 samples of red wine
+\t classified into 6 classes of quality (ratings 3-8)
+\t with data on 11 features (ex. residual sugar) for each sample
+Quit (type 'q') """
 
     while(True):
         DATASET = input(menu_message).lower()
@@ -73,14 +73,14 @@ def dataset_menu():
 def agent_menu():
     global AGENT
     menu_message = """\nChoose which learning agent to use: 
-          Decision Tree (type 't')
-          \t This learning agent builds a binary decision tree of semi-optimum 
-          \t depth
-          Neural Net (type 'n')
-          \t This learning agent uses a 2-layer feedforward neural network
-          \t and trains by running multiple epochs where it updates the weights
-          \t and activations for each layer
-          Quit (type 'q') """
+Decision Tree (type 't')
+\t This learning agent builds a binary decision tree of semi-optimum 
+\t depth
+Neural Net (type 'n')
+\t This learning agent uses a 2-layer feedforward neural network
+\t and trains by running multiple epochs where it updates the weights
+\t and activations for each layer
+Quit (type 'q') """
 
     while(True):
         AGENT = input(menu_message).lower()
@@ -165,10 +165,10 @@ def net_menu():
 def bagging_menu():
     global BAGGING, BAGSIZE
     menu_message = """\nBagging is a way to fight over fitting by breaking up the
-                      \t data into smaller subsets. This is done by running the
-                      \t agent on a subset of the atributes and a subset of the
-                      \t total cases. Then the most common choice is returned.
-                      Choose yes/no(type 'y'/'n') """
+\t data into smaller subsets. This is done by running the
+\t agent on a subset of the atributes and a subset of the
+\t total cases. Then the most common choice is returned.
+Choose yes/no(type 'y'/'n') """
     while(True):
         BAGGING = input(menu_message).lower()
         if len(BAGGING)==1 and BAGGING in 'ynq':
@@ -179,9 +179,9 @@ def bagging_menu():
         BAGSIZE=1
         return
     menu_message = """\nBagging uses multiple agents, please input the desired number
-                      \t of agents. The larger the number, the longer the program will
-                      \t take to build a set. A larger number will also be more accurate
-                      Choose a number greater than 1 (ex 20) """
+\t of agents. The larger the number, the longer the program will
+\t take to build a set. A larger number will also be more accurate
+Choose a number greater than 1 (ex 20) """
     while(True):
         BAGSIZE = input(menu_message).lower()
         if BAGSIZE=='q':
@@ -200,9 +200,9 @@ def bagging_menu():
 
 def tree_menu():
     menu_message = """\nTree's are usually built to a specific depth, please provide
-                      \t a depth to be used. If 0 is provided, the tree will try and 
-                      \t find a near optimal depth to use.
-                      Choose an integer >= 0: """
+\t a depth to be used. If 0 is provided, the tree will try and 
+\t find a near optimal depth to use.
+Choose an integer >= 0: """
     depth = ""
     while (True):
         depth = input(menu_message).lower()
@@ -219,11 +219,11 @@ def tree_menu():
             print("That's not a valid number.")
 
     menu_message = """\nA node in the tree is considered a leaf if it is at the max
-                      \t depth or if it has a minimum number of elements. Please
-                      \t provide the number of elements that will define a minimume
-                      \t size. If 0 is provided, the tree will attempt to fine
-                      \t a near optimal size
-                      Choose an integer >= 0: """
+\t depth or if it has a minimum number of elements. Please
+\t provide the number of elements that will define a minimume
+\t size. If 0 is provided, the tree will attempt to fine
+\t a near optimal size
+Choose an integer >= 0: """
     size = ""
     while (True):
         size = input(menu_message).lower()

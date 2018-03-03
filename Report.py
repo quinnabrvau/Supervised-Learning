@@ -54,7 +54,11 @@ class Report(dict):
 
             #Nueral Net Specific Data Types
             "netTrainCycle":
-            "The nueral net performed XXXX training cycles"
+            "The nueral net performed XXXX training cycles",
+            "netAlpha": "The nueral net used an alpha of XXXX",
+            "netLayers": "The nueral net was made of XXXX layers",
+            "netActivation": "The nueral net used an XXXX function for the activation function",
+
         }
         self.order = [
             "dataset",
@@ -71,7 +75,10 @@ class Report(dict):
             "treeDepth",
             "treeMinSize",
             #Nueral Net Specific Data Types
-            "netTrainCycle"
+            "netTrainCycle",
+            "netAlpha",
+            "netLayers",
+            "netActivation"
         ]
 
     def __str__(self):
