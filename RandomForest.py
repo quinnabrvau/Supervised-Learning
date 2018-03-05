@@ -24,7 +24,7 @@ class RandomForest:
         elif p[0] == 0:
             p = (findApproxDepth(self.train, self.valid, 0, p[1])[0], p[1])
         elif p[1] == 0:
-            p = (p[0], findApproxDepth(self.train, self.valid, p[0], p[1])[0])
+            p = (p[0], findApproxDepth(self.train, self.valid, p[0], 0)[1])
         return p[0:2]
 
     def build(self, params=None, rep=None):
