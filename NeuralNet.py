@@ -13,13 +13,14 @@ available online at: http://www.cristiandima.com/neural-networks-from-scratch-in
 
 import numpy as np
 
+
 class NeuralNet:
     """A neural net class which can be trained on ndarrays of data and classifications."""
 
     def __init__(self, num_features, num_classifications, alpha=10e-6, decay=False, layers=2.0):
         self.num_features = num_features
         self.num_classifications = num_classifications
-        self.num_hidden_nodes = int(num_features * layers)  # have twice as many nodes in each hidden layer as features
+        self.num_hidden_nodes = int(num_features * layers)
         self.alpha = alpha
         self.layers = layers
         self.decay = decay
@@ -34,6 +35,8 @@ class NeuralNet:
         """Trains the neural net based on the numpy ndarray X matrix of samples and features
         using the numpy ndarray vector Y of associated classifications to update the model"""
 
+        min_alpha = 0.00001  # the lowest alpha I want to use
+        decay_rate = 0.001 # the amount to decay per epoch
         min_epochs = 100  # the fewest epochs I want to run
         max_epochs = 100000  # the most epochs I want to run
         previous_training_loss = 0  # initialize the loss for the training
@@ -48,8 +51,12 @@ class NeuralNet:
         for i in range(Y_train.shape[0]):
             one_hot_encodings[i, Y_train[i]] = 1
 
-        # run mulitple epochs of training to get more accurate weights and predictions
+        # run multiple epochs of training to get more accurate weights and predictions
         for epoch in range(max_epochs):
+
+            # adjust alpha if decay is being used
+            if self.decay and self.alpha > min_alpha:
+                self.alpha = self.alpha * 1.0 / (1.0 + (decay_rate * epoch))
 
             # train for a single epoch and get the training loss (how wrong the model currently is)
             train_loss = self._train_single_epoch(X_train, one_hot_encodings)
