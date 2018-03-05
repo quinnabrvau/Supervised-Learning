@@ -25,7 +25,7 @@ def calculate_accuracy(Y, Y_predict):  # TODO: Break into a separate Report clas
     return total_matching / total_entries
 
 class NNTestDriver:
-    def __init__(self,train,test,valid):
+    def __init__(self,train,test,valid,p):
         train_data = np.asarray(train)
         test_data = np.asarray(test)
         valid_data = np.asarray(valid)
@@ -44,7 +44,8 @@ class NNTestDriver:
         num_train_samples, num_features = self.X_train.shape
         alpha = 10e-5  # learning rate
         num_classifications = max(train.classes)
-        self.NN = NeuralNet(num_features, num_classifications+1, alpha)
+        layers,activation,alpha,decay = p
+        self.NN = NeuralNet(num_features, num_classifications+1, alpha,decay,layers)
 
     def build(self,params=None,Report=None):
         # start_time = time.time()  # TODO: Possibly format time?

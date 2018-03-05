@@ -7,7 +7,6 @@ Final Project
 Main Menu, entry point to the project
 """
 
-
 from Bagger import BaggerList
 from RandomForest import RandomForest
 from NNTestDriver import NNTestDriver
@@ -39,18 +38,18 @@ def main_menu():
     We have implemented two learning agents (a decision tree and a neural net)
     and have two datasets to test them on (Fischer Iris and Red Wine Quality)
 
-    --------------------------------------------------------------------------""")
+    --------------------------------------------------------------------------"""
+          )
     dataset_menu()
-    if DATASET=='q':return
+    if DATASET == 'q': return
     agent_menu()
-    if AGENT=='q':return
+    if AGENT == 'q': return
     bagging_menu()
-    if BAGGING=='q' or BAGSIZE=='q':return
-    start = time()
+    if BAGGING == 'q' or BAGSIZE == 'q': return
     run_from_menu()
-    REPORT['totalTime'] = "%.4f" % ((time() - start))
+    REPORT['totalTime'] = "%.4f" % (float(REPORT['predictTime']) + float(
+        REPORT['buildTime']) + float(REPORT['openTime']))
     print(REPORT)
-
 
 
 def dataset_menu():
@@ -65,9 +64,9 @@ Red Wine Quality Dataset (type 'w')
 \t with data on 11 features (ex. residual sugar) for each sample
 Quit (type 'q') """
 
-    while(True):
+    while (True):
         DATASET = input(menu_message).lower()
-        if len(DATASET)==1 and DATASET in 'iwq':
+        if len(DATASET) == 1 and DATASET in 'iwq':
             break
         else:
             print("That's not a valid option.")
@@ -85,7 +84,7 @@ Neural Net (type 'n')
 \t and activations for each layer
 Quit (type 'q') """
 
-    while(True):
+    while (True):
         AGENT = input(menu_message).lower()
         if AGENT == 't':
             break
@@ -96,29 +95,28 @@ Quit (type 'q') """
         else:
             print("That's not a valid option.")
 
+
 def net_menu():
     hidden_layer_message = """\nHow many nodes do you want to use in the hidden layer? 
-                    Typically, you use about 1-2x the number of nodes in your input layer.
-                    The more nodes you have, the better the neural net can predict, 
-                    but the more slowly it runs. Enter an integer between 1 and 2:"""
-    activation_message = """\nWhich activation function would you like to use?
-                    You can use a sigmoid function or a tanh function.
-                    Sigmoid functions have a range of [0, 1] and Tanh functions have a range of [-1, 1].
-                    Tanh functions usually give better performance. Type 's' for sigmoid, or 't' for tanh:"""
+\tTypically, you use about 1-2x the number of nodes in your input layer.
+\tThe more nodes you have, the better the neural net can predict, 
+\tbut the more slowly it runs. 
+Enter a decimal mulitplication rate between 1.0 and 2.0:"""
     alpha_start_message = """\nWhat value for alpha (learning rate) do you want to use? 
-                    Typically alpha is in the range [0.1, 0.00001].
-                    If you have a large alpha [0.1], your model may jump around too much.
-                    If you have a small alpha [0.00001], your model may learn too slowly.
-                    Enter a decimal between 0.1 and 0.00001:"""
+\tTypically alpha is in the range [0.1, 0.00001].
+\tIf you have a large alpha [0.1], your model may jump around too much.
+\tIf you have a small alpha [0.00001], your model may learn too slowly.
+\t(Note: You'll get a chance to use alpha decay next, so it's okay to pick a large alpha
+\tif you plan to use decay).
+Enter a decimal between 0.1 and 0.00001:"""
     alpha_decay_message = """\nDo you want your alpha (learning rate) to decay over time?
-                    Decaying alpha allows the learning agent to be more aggressive in the beginning.
-                    (type 'y' or 'n'):"""
+\tDecaying alpha allows the learning agent to be more aggressive in the beginning.
+\t(type 'y' or 'n'):"""
     # Generally you optimize your model with a large learning rate (0.1 or so),
     # and then progressively reduce this rate, often by an order of magnitude
     # (so to 0.01, then 0.001, 0.0001, etc.).
     # Typical learning rates are in [0.1, 0.00001]
     # alpha decay = alpha / sqrt(t) where t= current iteration number
-
 
     letter_choice = ''
     continue_menu = True
@@ -126,53 +124,49 @@ def net_menu():
     activation = ''
     alpha = 0.1
     decay = ''
-    while(continue_menu):
-        letter_choice = input(hidden_layer_message).lower()
-        if letter_choice == '1':
-            layers = 1
-            continue_menu = False
-        elif letter_choice == '2':
-            continue_menu = False
-        else:
-            print("That's not a valid option. \n")
-    continue_menu = True
-    while(continue_menu):
-        activation = input(activation_message).lower()
-        if activation=='s':
-            break
-        elif activation=='t':
-            break
-        else:
-            print("That's not a valid option. \n")
-    while(continue_menu):
-        alpha = input(alpha_start_message).lower()
+    while (continue_menu):
+        layers = input(hidden_layer_message).lower()
         try:
-            alpha = float(alpha)
-            if alpha < 0.1 and alpha > 0.00001:
+            layers = float(layers)
+            if layers <= 2 and layers >= 1:
                 break
             else:
                 print("That's not a valid number.")
         except:
             print("That's not a valid number.")
-    while(continue_menu):
+    continue_menu = True
+    activation = 's'
+    while (continue_menu):
+        alpha = input(alpha_start_message).lower()
+        try:
+            alpha = float(alpha)
+            if alpha <= 0.1 and alpha >= 0.00001:
+                break
+            else:
+                print("That's not a valid number.")
+        except:
+            print("That's not a valid number.")
+    while (continue_menu):
         decay = input(alpha_decay_message).lower()
-        if decay=='y':
+        if decay == 'y':
+            decay = True
             break
-        elif decay=='n':
+        elif decay == 'n':
+            decay = False
             break
         else:
             print("That's not a valid option. \n")
 
-    REPORT['netAlpha']=str(alpha)
-    if decay=='y':
-        REPORT['netAlpha']+=" with a decay"
-    REPORT['netLayers']=str(layers)
-    if activation=='t':
-        REPORT['netActivation']="hyperbolic tangent"
-    elif activation=='s':
-        REPORT['netActivation']="sigmoid"
+    REPORT['netAlpha'] = str(alpha)
+    if decay == 'y':
+        REPORT['netAlpha'] += " with a decay"
+    REPORT['netLayers'] = str(layers)
+    if activation == 't':
+        REPORT['netActivation'] = "hyperbolic tangent"
+    elif activation == 's':
+        REPORT['netActivation'] = "sigmoid"
 
-    return layers,activation,alpha,decay
+    return layers, activation, alpha, decay
 
 
 def bagging_menu():
@@ -182,23 +176,23 @@ def bagging_menu():
 \t agent on a subset of the atributes and a subset of the
 \t total cases. Then the most common choice is returned.
 Choose yes/no(type 'y'/'n') """
-    while(True):
+    while (True):
         BAGGING = input(menu_message).lower()
-        if len(BAGGING)==1 and BAGGING in 'ynq':
+        if len(BAGGING) == 1 and BAGGING in 'ynq':
             break
         else:
             print("That's not a valid option.")
-    if BAGGING!='y': 
-        BAGSIZE=1
+    if BAGGING != 'y':
+        BAGSIZE = 1
         return
     menu_message = """\nBagging uses multiple agents, please input the desired number
 \t of agents. The larger the number, the longer the program will
 \t take to build a set. A larger number will also be more accurate
 Choose a number greater than 1 (ex 20) """
-    while(True):
+    while (True):
         BAGSIZE = input(menu_message).lower()
-        if BAGSIZE=='q':
-            BAGSIZE=1
+        if BAGSIZE == 'q':
+            BAGSIZE = 1
             return
         try:
             BAGSIZE = int(BAGSIZE)
@@ -210,6 +204,7 @@ Choose a number greater than 1 (ex 20) """
                 print("Please choose a positive number greater than one.")
         except:
             print("That's not a valid number.")
+
 
 def tree_menu():
     menu_message = """\nTree's are usually built to a specific depth, please provide
@@ -253,27 +248,28 @@ Choose an integer >= 0: """
             print("That's not a valid number.")
     return depth, size
 
+
 def run_from_menu():
-    global DATASET,AGENT,BAGGING,BAGSIZE,REPORT
+    global DATASET, AGENT, BAGGING, BAGSIZE, REPORT
     if 'q' in AGENT or 'q' in DATASET or 'q' in BAGGING:
         return
     BL = None
-    if DATASET=='i':
-        REPORT['dataset']="iris"
-    elif DATASET=='w':
-        REPORT['dataset']='wine'
+    if DATASET == 'i':
+        REPORT['dataset'] = "iris"
+    elif DATASET == 'w':
+        REPORT['dataset'] = 'wine'
     else:
-        REPORT['dataset']=DATASET
-    if BAGGING=='y':
-        REPORT['bagging']=str(BAGSIZE)
+        REPORT['dataset'] = DATASET
+    if BAGGING == 'y':
+        REPORT['bagging'] = str(BAGSIZE)
     if AGENT == 't':
-        REPORT['agent']="Decision Tree"
-        BL = BaggerList(RandomForest,DATASET,BAGSIZE,REPORT)
-        BL.params( tree_menu() )
+        REPORT['agent'] = "Decision Tree"
+        BL = BaggerList(RandomForest, DATASET, BAGSIZE, REPORT)
+        BL.params(tree_menu())
     elif AGENT == 'n':
-        REPORT['agent']="Neural Network"
-        BL = BaggerList(NNTestDriver,DATASET,BAGSIZE,REPORT)
-        BL.params( net_menu() )
+        REPORT['agent'] = "Neural Network"
+        p = net_menu()
+        BL = BaggerList(NNTestDriver, DATASET, BAGSIZE, REPORT, p)
     else:
         print("Something went wrong, exiting ...")
         return
@@ -283,10 +279,5 @@ def run_from_menu():
     print("test complete")
 
 
-
 if __name__ == "__main__":
     main_menu()
-
-
-
-

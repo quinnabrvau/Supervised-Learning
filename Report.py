@@ -60,7 +60,7 @@ class Report(dict):
             "netAlpha":
             "The nueral net used an alpha of XXXX",
             "netLayers":
-            "The nueral net was made of XXXX layers",
+            "The nueral net was made of XXXXx layers",
             "netActivation":
             "The nueral net used an XXXX function for the activation function",
         }

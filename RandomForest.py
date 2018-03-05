@@ -14,7 +14,7 @@ from Report import Report
 
 
 class RandomForest:
-    def __init__(self, train, test, valid):
+    def __init__(self, train, test, valid,p):
         self.train, self.test, self.valid = train, test, valid
         self.tree = DecisionTree(train)
 

@@ -18,11 +18,11 @@ from time import time
 
 
 class Bagger:
-    def __init__(self, searcher, train, test, valid, shrink=True, report=None):
+    def __init__(self, searcher, train, test, valid, shrink=True, report=None,p=None):
         if report != None: self.REPORT = report
         else: self.REPORT = {}
         if not shrink:
-            self.C = searcher(train, test, valid)
+            self.C = searcher(train, test, valid,p)
             return
         foo = ceil(sqrt(len(train[0]) - 1))
         attributes = [i for i in range(len(train[0]) - 1)]
@@ -53,7 +53,7 @@ class Bagger:
         self.train.header = train.header
         self.train.mut = train.mut
         self.train.classes = train.classes
-        self.C = searcher(self.train, self.test, self.valid)
+        self.C = searcher(self.train, self.test, self.valid,p)
 
     def params(self, p=None):
         return self.C.params(p)
@@ -69,7 +69,7 @@ class Bagger:
 
 
 class BaggerList(list):
-    def __init__(self, searcher, ty="iris", size=100, report=None):
+    def __init__(self, searcher, ty="iris", size=100, report=None,p=None):
         start = time()
         if report != None: self.REPORT = report
         else: self.REPORT = {}
@@ -84,8 +84,9 @@ class BaggerList(list):
         self.C = searcher
         for i in range(size):
             self.append(
-                Bagger(self.C, self.train, self.test, self.valid, size != 1,
-                       report))
+                Bagger(self.C, self.train, self.test, self.valid, size != 1,report,p))
+        if p!=None:
+            self.p = p
         self.REPORT['openTime'] = "%.4f" % ((time() - start))
 
     def params(self, p=None):

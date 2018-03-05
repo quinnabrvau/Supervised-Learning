@@ -16,14 +16,13 @@ import numpy as np
 class NeuralNet:
     """A neural net class which can be trained on ndarrays of data and classifications."""
 
-    def __init__(self, num_features, num_classifications, alpha=10e-6):
+    def __init__(self, num_features, num_classifications, alpha=10e-6, decay=False, layers=2.0):
         self.num_features = num_features
         self.num_classifications = num_classifications
-        self.num_hidden_nodes = num_features * 2  # have twice as many nodes in each hidden layer as features
+        self.num_hidden_nodes = int(num_features * layers)  # have twice as many nodes in each hidden layer as features
         self.alpha = alpha
-        self.activation = ''
-        self.layers = ''
-        self.decay = ''
+        self.layers = layers
+        self.decay = decay
 
         # initialize the weight matrices and bias vectors with random numbers
         self.W1 = np.random.randn(num_features, self.num_hidden_nodes)
