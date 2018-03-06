@@ -165,10 +165,6 @@ Enter a decimal between 0.1 and 0.00001:"""
     if decay == 'y':
         REPORT['netAlpha'] += " with a decay"
     REPORT['netLayers'] = str(layers)
-    if activation == 't':
-        REPORT['netActivation'] = "hyperbolic tangent"
-    elif activation == 's':
-        REPORT['netActivation'] = "sigmoid"
 
     return layers, activation, alpha, decay
 
@@ -264,8 +260,10 @@ def run_from_menu():
     BL = None
     if DATASET == 'i':
         REPORT['dataset'] = "iris"
+        REPORT['expectedAccuracy'] = "97 +/- 4"
     elif DATASET == 'w':
         REPORT['dataset'] = 'wine'
+        REPORT['expectedAccuracy'] = "62.4 +/- 0.4"
     else:
         REPORT['dataset'] = DATASET
     if BAGGING == 'y':

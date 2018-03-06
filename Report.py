@@ -11,7 +11,7 @@ Prints a report of relevant information on how the learning agent did
 class Report(dict):
     def __init__(self):
         dict.__init__(self)
-        self.explainer = {
+        self.explainer = { # strings to explain data
             "dataset":
             "This run used the XXXX dataset",
             "datasetTrainSize":
@@ -19,7 +19,7 @@ class Report(dict):
             "datasetValidSize":
             "The size of the validation data is XXXX",
             "datasetTestSize":
-            "The size of the testing data is XXXX",
+            "The size of the testing data is XXXX\n",
             "agent":
             "This run used a XXXX agent",
             "bagging":
@@ -31,14 +31,15 @@ class Report(dict):
             "predictTime":
             "It took XXXX seconds to predict the test set",
             "totalTime":
-            "It took XXXX seconds to run the program",
+            "It took XXXX seconds to run the program\n",
             "predictAccuracy":
             "The prediction accurately guessed XXXX%  of the test data",
+            'expectedAccuracy':"The benchmark accuracy for this data set is XXXX%\n",
             #Tree Specific Data Types
             "treeDepth":
             "The tree was built to a depth of XXXX",
             "treeMinSize":
-            "Any node smaller then XXXX elements was automatically made a leaf",
+            "Any node smaller then XXXX elements was automatically made a leaf\n",
 
             #Nueral Net Specific Data Types
             "netTrainCycle":
@@ -46,12 +47,18 @@ class Report(dict):
             "netAlpha":
             "The nueral net used an alpha of XXXX",
             "netLayers":
-            "The nueral net was made of XXXXx layers",
-            "netActivation":
-            "The nueral net used an XXXX function for the activation function",
+            "The nueral net was made of XXXXx layers\n",
+
+            #Data set
+            "input":"Raw Training Data Sample\nXXXX",
+            "inputData":"Training Data Statistics\nXXXX",
+            "inputNorm":"Normalized Training Data Sample\nXXXX",
         }
-        self.order = [
+        self.order = [ # order to print output
             "dataset",
+            "input",
+            "inputData",
+            "inputNorm",
             "datasetTrainSize",
             "datasetValidSize",
             "datasetTestSize",
@@ -62,6 +69,7 @@ class Report(dict):
             "predictTime",
             "totalTime",
             "predictAccuracy",
+            "expectedAccuracy",
             #Tree Specific Data Types
             "treeDepth",
             "treeMinSize",

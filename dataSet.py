@@ -54,26 +54,35 @@ class dataSet(list):
         for d in self:
             out += str(d) + "\n"
         if len(self.max):
-            r1 = "++++["
-            r2 = "----["
-            r3 = "mean["
-            r4 = "std ["
-            for i in range(len(self.max)):
-                r1 += "%.2f" % self.max[i] + "\t, "
-                r2 += "%.2f" % self.min[i] + "\t, "
-                r3 += "%.2f" % self.mean[i] + "\t, "
-                r4 += "%.2f" % self.std[i] + "\t, "
-            out += r1[:
-                      -3] + "\t]\n" + r2[:
-                                         -3] + "\t]\n" + r3[:
-                                                            -3] + "\t]\n" + r4[:
-                                                                               -3] + "\t]\n"
+            out += self.print_stats()
         if len(self.classes):
             out += "classes: "
             for c in self.classes:
                 out += str(c) + ", "
             out = out[:-2]
         return out
+
+    def print_stats(self):
+        r1 = "max ["
+        r2 = "min ["
+        r3 = "mean["
+        r4 = "std ["
+        for i in range(len(self.max)):
+            d = "%.2f" % self.max[i]
+            r1 += d + " "*(8-len(d)) + ", "
+            d = "%.2f" % self.min[i]
+            r2 +=  d + " "*(8-len(d)) + ", "
+            d = "%.2f" % self.mean[i]
+            r3 +=  d + " "*(8-len(d)) + ", "
+            d = "%.2f" % self.std[i]
+            r4 +=  d + " "*(8-len(d)) + ", "
+        return r1[:-3] + "\t]\n" + r2[:-3] + "\t]\n" + r3[:-3] + "\t]\n" + r4[:-3] + "\t]\n"
+
+    def print_short(self,l = 3):
+        out = str(self.header) + "\n"
+        for i in range(l):
+            out += str(self[i]) + "\n"  
+        return out      
 
     def read(self, fileName):
         """reads a csv into the data set"""

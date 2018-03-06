@@ -60,9 +60,13 @@ class data(list):
         out = "{   ["
         for j in self[0:-1]:
             if isinstance(j, float) or isinstance(j, int):
-                out += ("%.2f" % j) + "\t, "
+                d = ("%.2f" % j)
+                out += d + " "*(8-len(d)) + ", "
             else:
-                out += str(j) + ", "
+                if len(str(j))<8:
+                    out += str(j) + " "*(8-len(str(j))) + ", "
+                else:
+                    out += str(j)[:8] + ", "
         out = out[:-2] + "] "
         out += str(self[-1]) + " }"
         return out

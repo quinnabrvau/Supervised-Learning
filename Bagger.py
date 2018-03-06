@@ -49,7 +49,10 @@ class Bagger:
                 d_.append(d[j])
             d_.append(d[-1])
             self.valid.append(d_)
-        self.train = tmp.randSubSet(int(len(tmp) / 2), True)
+        sub_size = 200
+        if sub_size > len(tmp):
+            sub_size=int(len(tmp)/2)
+        self.train = tmp.randSubSet(sub_size, True)
         self.train.header = train.header
         self.train.mut = train.mut
         self.train.classes = train.classes
@@ -76,11 +79,17 @@ class BaggerList(list):
         list.__init__(self)
         if ty == 'iris' or ty == 'i':
             self.train, self.test, self.valid = getIrisData(1)
+            tr, te, v = getIrisData(0)
         elif ty == 'wine' or ty == 'w':
             self.train, self.test, self.valid = getWineData(1)
+            tr, te, v = getWineData(0)
         self.REPORT['datasetTrainSize'] = str(len(self.train))
         self.REPORT['datasetTestSize'] = str(len(self.test))
         self.REPORT['datasetValidSize'] = str(len(self.valid))
+
+        self.REPORT['input']    =str(        tr.print_short())
+        self.REPORT['inputData']=str(        tr.print_stats())
+        self.REPORT['inputNorm']=str(self.train.print_short())
         self.C = searcher
         for i in range(size):
             self.append(
@@ -99,7 +108,7 @@ class BaggerList(list):
     def build(self):
         start = time()
         r = len(self)
-        if r > 1: print("building a set of agents for boosting")
+        if r > 1: print("building a set of agents for bagging")
         else: print("building an agent")
         for i in range(r):
             self[i].build(self.p)
@@ -123,9 +132,14 @@ class BaggerList(list):
         for i in range(len(guess[0])):
             g.append(np.argmax(np.bincount(foo[:, i])))
         success = 0
+        self.REPORT['output']='predict, actual, correct\n'
         for i in range(len(g)):
+            self.REPORT['output'] += str(g[i])+"\t "+str(actual[i])+"\t "
             if g[i] == actual[i]:
                 success += 1
+                self.REPORT['output'] += 'correct\n'
+            else:
+                self.REPORT['output'] += "wrong\n"
         self.REPORT['predictTime'] = "%.4f" % ((time() - start))
         self.REPORT['predictAccuracy'] = "%.3f" % (
             100 * success / len(self.test))
