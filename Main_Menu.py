@@ -13,11 +13,6 @@ from NNTestDriver import NNTestDriver
 from Report import Report
 from time import time
 
-# Welcome screen & description of program
-# loop until quit
-# Ask which dataset (give descriptions)
-# Ask which learning agent
-# run agent
 
 # default choices to run the program
 DATASET = 'w'
@@ -28,6 +23,9 @@ REPORT = Report()
 
 
 def main_menu():
+    """Welcomes the user and explains what the purpose of the program is.
+    Also calls the learning agents based on the user choices
+    and calls the report to show the results."""
     global DATASET, AGENT, BAGSIZE, BAGGING, REPORT
     print("""
     --------------------------------------------------------------------------
@@ -40,19 +38,28 @@ def main_menu():
 
     --------------------------------------------------------------------------"""
           )
+
+    # Get all the user choices for this run of the program
     dataset_menu()
     if DATASET == 'q': return
     agent_menu()
     if AGENT == 'q': return
     bagging_menu()
     if BAGGING == 'q' or BAGSIZE == 'q': return
+
+    # run the program with the user choices/parameters
     run_from_menu()
+
+    # record how much time the program took to run
     REPORT['totalTime'] = "%.4f" % (float(REPORT['predictTime']) + float(
         REPORT['buildTime']) + float(REPORT['openTime']))
+
+    # print a report with details about this run of the program
     print(REPORT)
 
 
 def dataset_menu():
+    """Gives the user info on the datasets and gets the user's choice of dataset"""
     global DATASET
     menu_message = """\nChoose one of the following options for the data set: 
 Fischer Iris Dataset (type 'i')
@@ -73,6 +80,7 @@ Quit (type 'q') """
 
 
 def agent_menu():
+    """Gives the user info on the learning agents and gets the user's choice of agent"""
     global AGENT
     menu_message = """\nChoose which learning agent to use: 
 Decision Tree (type 't')
@@ -97,6 +105,7 @@ Quit (type 'q') """
 
 
 def net_menu():
+    """Gives the user info on all the parameter options for the neural net and gets the user's choices"""
     hidden_layer_message = """\nHow many nodes do you want to use in the hidden layer? 
 \tTypically, you use about 1-2x the number of nodes in your input layer.
 \tThe more nodes you have, the better the neural net can predict, 
@@ -112,11 +121,6 @@ Enter a decimal between 0.1 and 0.00001:"""
     alpha_decay_message = """\nDo you want your alpha (learning rate) to decay over time?
 \tDecaying alpha allows the learning agent to be more aggressive in the beginning.
 \t(type 'y' or 'n'):"""
-    # Generally you optimize your model with a large learning rate (0.1 or so),
-    # and then progressively reduce this rate, often by an order of magnitude
-    # (so to 0.01, then 0.001, 0.0001, etc.).
-    # Typical learning rates are in [0.1, 0.00001]
-    # alpha decay = alpha / sqrt(t) where t= current iteration number
 
     letter_choice = ''
     continue_menu = True
@@ -170,6 +174,7 @@ Enter a decimal between 0.1 and 0.00001:"""
 
 
 def bagging_menu():
+    """Gives the user info on bagging and gets the user's choices for bagging and its parameters"""
     global BAGGING, BAGSIZE
     menu_message = """\nBagging is a way to fight over fitting by breaking up the
 \t data into smaller subsets. This is done by running the
@@ -207,6 +212,7 @@ Choose a number greater than 1 (ex 20) """
 
 
 def tree_menu():
+    """Gives the user info on decision trees and gets the user's parameter choices"""
     menu_message = """\nTree's are usually built to a specific depth, please provide
 \t a depth to be used. If 0 is provided, the tree will try and 
 \t find a near optimal depth to use.
@@ -250,6 +256,8 @@ Choose an integer >= 0: """
 
 
 def run_from_menu():
+    """Calls the decision tree or neural net learning agent with the desired parameters
+    based on the user's choices made in the menu"""
     global DATASET, AGENT, BAGGING, BAGSIZE, REPORT
     if 'q' in AGENT or 'q' in DATASET or 'q' in BAGGING:
         return
