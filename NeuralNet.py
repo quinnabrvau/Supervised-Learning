@@ -25,17 +25,17 @@ class NeuralNet:
         self.decay = decay
 
         # initialize the weight matrices and bias vectors with random numbers
-        self.W1 = np.random.randn(num_features, self.num_hidden_nodes)
-        self.b1 = np.random.randn(self.num_hidden_nodes)
-        self.W2 = np.random.randn(self.num_hidden_nodes, self.num_classifications)
-        self.b2 = np.random.randn(self.num_classifications)
+        self.W1 = np.random.uniform(size=(num_features, self.num_hidden_nodes))
+        self.b1 = np.random.uniform(size=self.num_hidden_nodes)
+        self.W2 = np.random.uniform(size=(self.num_hidden_nodes, self.num_classifications))
+        self.b2 = np.random.uniform(size=self.num_classifications)
 
     def train(self, X_train, Y_train, X_valid, Y_valid):
         """Trains the neural net based on the numpy ndarray X matrix of samples and features
         using the numpy ndarray vector Y of associated classifications to update the model"""
 
         min_alpha = 0.00001  # the lowest alpha I want to use
-        decay_rate = 0.001 # the amount to decay per epoch
+        decay_rate = 0.001  # the amount to decay per epoch
         min_epochs = 100  # the fewest epochs I want to run
         max_epochs = 100000  # the most epochs I want to run
         previous_training_loss = 0  # initialize the loss for the training
@@ -82,7 +82,7 @@ class NeuralNet:
             # if our delta for training loss is too small or our delta for validation loss too big
             # stop training since we aren't gaining much
             if epoch > min_epochs and (train_loss_delta < train_loss_epsilon or valid_loss_delta < valid_loss_epsilon):
-                print("The neural net is stopping since the loss has converged.")
+                print("\nThe neural net is stopping at epoch", epoch, "since the loss has converged.\n")
                 return epoch  # stop running
 
         return max_epochs
@@ -105,7 +105,7 @@ class NeuralNet:
         self.W1 -= self.alpha * np.dot(X.T, hidden_layer_error)
         self.b1 -= self.alpha * (hidden_layer_error).sum(axis=0)
 
-        loss = np.sum(-one_hot_encodings * np.log(Y_hat))  # how wrong the model currently is
+        loss = calculate_loss(one_hot_encodings, Y_hat) # how wrong the model currently is
 
         return loss
 
@@ -122,18 +122,29 @@ class NeuralNet:
         A = sigmoid(np.dot(X, self.W1) + self.b1)  # gets an activation matrix for the hidden layer
         Y_hat = softmax(np.dot(A, self.W2) + self.b2)  # gets predicted classification values
 
-        loss = np.sum(-one_hot_encodings * np.log(Y_hat))  # how wrong the model currently is
+        loss = calculate_loss(one_hot_encodings, Y_hat) # how wrong the model currently is
 
         # return predicted values for this dataset
         return np.argmax(Y_hat, axis=1), loss
 
 
 def sigmoid(Z):
-    """Sigmoid function to use between input and hidden layer for activation"""
-    return 1.0 / (1.0 + np.exp(-Z))
+    """Sigmoid function to use between input and hidden layer for activation
+    which avoids exploding gradient by bounding Z"""
+    bounded_Z = np.maximum(Z, -300)  # bounded to -300 to avoid overflow error in np.exp
+    return 1.0 / (1.0 + np.exp(-bounded_Z))
 
 
 def softmax(Z):
-    """Softmax function to use between hidden and output layers to get a prediction for classifications"""
-    expZ = np.exp(Z)
+    """Softmax function to use between hidden and output layers to get a prediction for classifications
+    which avoids exploding gradient by bounding Z"""
+    bounded_Z = np.minimum(Z, 300)  # bounded to 300 to avoid overflow error in np.exp
+    expZ = np.exp(bounded_Z)
     return expZ / expZ.sum(axis=1, keepdims=True)
+
+
+def calculate_loss(one_hot_encodings, Y_hat):
+    """Avoids vanishing gradient (log(0)) issues by adding an epsilon to the Y_hat values
+    Returns the loss (how wrong the model currently is)"""
+    epsilon = 10e-20  # very small epsilon to avoid log(0) errors
+    return np.sum(-one_hot_encodings * np.log(Y_hat + epsilon))
