@@ -43,6 +43,7 @@ class dataSet(list):
             self.findClasses()
 
     def findClasses(self):
+        """finds all of the different classes in the data"""
         self.classes = []
         for i in range(len(self)):
             if self[i][-1] not in self.classes:
@@ -63,6 +64,7 @@ class dataSet(list):
         return out
 
     def print_stats(self):
+        """prints the min, max, mean, and standard deviation"""
         r1 = "max ["
         r2 = "min ["
         r3 = "mean["
@@ -79,6 +81,7 @@ class dataSet(list):
         return r1[:-3] + "\t]\n" + r2[:-3] + "\t]\n" + r3[:-3] + "\t]\n" + r4[:-3] + "\t]\n"
 
     def print_short(self,l = 3):
+        """prints a subset of the data"""
         out = str(self.header) + "\n"
         for i in range(l):
             out += str(self[i]) + "\n"  
@@ -133,6 +136,7 @@ class dataSet(list):
         self.findMinMax()
 
     def normStd(self, mean=None, std=None):
+        """normalizes the data to the standard deviation"""
         if mean == None:
             mean = self.mean
         if std == None:
@@ -144,6 +148,7 @@ class dataSet(list):
         self.findMinMax()
 
     def divide(self, split):
+        """splits data into true false values, unused"""
         for i in range(len(self)):
             for j in range(len(self[i]) - 1):
                 if self[i][j] > split:
@@ -153,6 +158,7 @@ class dataSet(list):
         self.findMinMax()
 
     def strings2Ints(self, mut=None):
+        """converts strings to integers"""
         if mut != None:
             self.mut = mut
         else:
@@ -173,6 +179,7 @@ class dataSet(list):
         self.findClasses()
 
     def getString(self, val):
+        """returns the string value of integers"""
         if val in self.mut.keys():
             return self.mut[val]
         return str(val)
@@ -194,6 +201,7 @@ class dataSet(list):
         return out
 
     def subSet(self, atr):
+        """returns a sub set with only the given attributes"""
         out = dataSet()
         for d in self:
             d_ = data()

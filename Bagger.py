@@ -19,6 +19,7 @@ from time import time
 
 class Bagger:
     def __init__(self, searcher, train, test, valid, shrink=True, report=None,p=None):
+        """initializes an agent"""
         if report != None: self.REPORT = report
         else: self.REPORT = {}
         if not shrink:
@@ -59,19 +60,24 @@ class Bagger:
         self.C = searcher(self.train, self.test, self.valid,p)
 
     def params(self, p=None):
+        """sets and gets params for an agent"""
         return self.C.params(p)
 
     def build(self, params):
+        """trains an agent"""
         self.C.build(params, self.REPORT)
 
     def predict(self):
+        """guesses the classes for the test data, returns a list of guesses"""
         return self.C.predict()
 
     def __str__(self):
+        """returns the string of the class"""
         return str(self.C)
 
 
 class BaggerList(list):
+    """list class to hold all of the bagged agent"""
     def __init__(self, searcher, ty="iris", size=100, report=None,p=None):
         start = time()
         if report != None: self.REPORT = report
@@ -99,6 +105,7 @@ class BaggerList(list):
         self.REPORT['openTime'] = "%.4f" % ((time() - start))
 
     def params(self, p=None):
+        """gets and sets params for the bagged agent"""
         for i in (range(len(self))):
             x = self[i].params(p)
             if x != None:
@@ -106,6 +113,7 @@ class BaggerList(list):
         self.p = p
 
     def build(self):
+        """trains all of the agents"""
         start = time()
         r = len(self)
         if r > 1: print("building a set of agents for bagging")
@@ -119,6 +127,7 @@ class BaggerList(list):
         self.REPORT['buildTime'] = "%.4f" % ((time() - start))
 
     def predict(self):
+        """guesses the classes for the test data and returns the accuracy success/total"""
         start = time()
         guess = []
         actual = []

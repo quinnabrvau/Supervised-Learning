@@ -19,6 +19,7 @@ class RandomForest:
         self.tree = DecisionTree(train)
 
     def params(self, p=None):
+        """sets the depth and min size parameters for a tree"""
         if p == None or p == (0, 0) or len(p) < 2:
             p = findApproxDepth(self.train, self.valid)[:2]
         elif p[0] == 0:
@@ -28,6 +29,7 @@ class RandomForest:
         return p[0:2]
 
     def build(self, params=None, rep=None):
+        """trains the tree"""
         mD = 4
         mS = 10
         if params != None:
@@ -39,6 +41,7 @@ class RandomForest:
         self.tree.buildTree(mD, mS, True)
 
     def predict(self):
+        """guesses the classes for the test data and returns a list classes"""
         out = []
         for d in self.test:
             out.append(self.tree.searchTree(d))

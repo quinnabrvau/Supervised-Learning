@@ -32,14 +32,17 @@ class DecisionTree(dataSet):
         self.i = -1
 
     def mostCommon(self):
+        """returns the most common class in a given data set"""
         d = [r[-1] for r in self]
         return max(set(d), key=d.count)
 
     def searchTree(self, d):
-        """self, d(data to predict with), n(depth)"""
+        """searches a tree for the class of given attributes d"""
         return searchTreeF(self, d)
 
     def split(self, mD, mS, depth=0):
+        """splits a tree into two trees lt - less than, gt - greater than
+        Then the program recursively searches the new trees"""
         self.i, self.v, groups, score = self.getSplit()
         if groups == None:
             return
@@ -63,11 +66,15 @@ class DecisionTree(dataSet):
             self.gt.split(mD, mS, depth + 1)
 
     def buildTree(self, mD=NN, mS=MM, shhh=False):
+        """builds a tree, finds the split for the root and proceeds recursively"""
         if not shhh: print("building tree:")
         self.split(mD, mS)
         if not shhh: print("tree built")
 
     def giniIndex(self, groups):
+        """finds the gini index for a given split, the gini index is a measure of
+        how evenly distributed resources are in set. The smaller the value, the more
+        even and the better the place to split a tree"""
         n = sum([len(g) for g in groups])
         gini = 0.0
         for g in groups:
@@ -80,6 +87,7 @@ class DecisionTree(dataSet):
         return gini
 
     def getSplit(self):
+        """finds where to split a node in the tree. Tries all values given for all attributes"""
         b_index, b_value, b_score, b_groups = 999, 999, 999, None
         for j in range(len(self[0]) - 1):
             for i in range(len(self)):
@@ -91,6 +99,7 @@ class DecisionTree(dataSet):
         return b_index, b_value, b_groups, b_score
 
     def splitAttribute(self, atr, divider=0.5):
+        """splits a data set by attribute atr and value divider"""
         big, lit = DecisionTree(None, self.atr), DecisionTree(None, self.atr)
         for d in self:
             if d[atr] > divider: big.append(d)
@@ -98,13 +107,16 @@ class DecisionTree(dataSet):
         return lit, big
 
     def printTree(self):
+        """prints the tree in a neat format"""
         printTreeF(self, 0, self)
 
     def testTree(self, valid):
+        """calls the test tree function"""
         return testTreeF(self, valid)
 
 
 def printTreeF(node, n, root):
+    """prints the tree in a neat format"""
     if isinstance(node, DecisionTree):
         print(".." * n, "[atr ", node.i, " < ", "%.2f" % node.v, "]", sep='')
         printTreeF(node.lt, n + 1, root)
@@ -114,6 +126,7 @@ def printTreeF(node, n, root):
 
 
 def searchTreeF(node, d):
+    """recursively searches the tree for the class of given data d"""
     if isinstance(node, DecisionTree):
         if node.i == 999: return node.mostCommon()
         if d[node.i] < node.v:
@@ -125,6 +138,7 @@ def searchTreeF(node, d):
 
 
 def testTreeF(node, test):
+    """checks the accuracy of a tree against the test data"""
     total = len(test)
     success = 0
     for d in test:
@@ -135,6 +149,7 @@ def testTreeF(node, test):
 
 
 def findApproxDepth(train, valid, mD=0, mS=0):
+    """tries and find a near optimal depth and min size to build a tree to"""
     print(
         "Building a random set of small trees to geuss the max depth and min set size values"
     )
@@ -170,6 +185,7 @@ def findApproxDepth(train, valid, mD=0, mS=0):
 
 
 def guessTreeOpt(train, test, valid):
+    """test function for decision tree class"""
     best = findApproxDepth(train, valid, 5, 5)
     tree = DecisionTree(train)
     print("building tree from full set")
