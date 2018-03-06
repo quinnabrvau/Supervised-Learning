@@ -51,6 +51,7 @@ class DecisionTree(dataSet):
         self.gt.atr.append((self.i, "%.1f" % self.v))
         self.gt.header, self.gt.mut = self.header, self.mut
         self.lt.header, self.lt.mut = self.header, self.mut
+        print(".." * depth, "[atr ", self.i, " < ", "%.2f" % self.v, "] gini -",score, sep='')
         if self.lt == None or self.gt == None:
             self.lt = self.gt = self.mostCommon()
             return
@@ -108,7 +109,10 @@ class DecisionTree(dataSet):
 
     def printTree(self):
         """prints the tree in a neat format"""
-        printTreeF(self, 0, self)
+        print(printTreeF(self, 0, self))
+
+    def __str__(self):
+        return printTreeF(self, 0, self)
 
     def testTree(self, valid):
         """calls the test tree function"""
@@ -117,12 +121,14 @@ class DecisionTree(dataSet):
 
 def printTreeF(node, n, root):
     """prints the tree in a neat format"""
+    out = ""
     if isinstance(node, DecisionTree):
-        print(".." * n, "[atr ", node.i, " < ", "%.2f" % node.v, "]", sep='')
-        printTreeF(node.lt, n + 1, root)
-        printTreeF(node.gt, n + 1, root)
+        out += ".." * n + "[atr " + str(node.i) + " < %.2f" % node.v + "]\n"
+        out += printTreeF(node.lt, n + 1, root)
+        out += printTreeF(node.gt, n + 1, root)
     else:
-        print(".." * n, root.getString(node), sep='')
+        out += ".." * n + root.getString(node) + "\n"
+    return out
 
 
 def searchTreeF(node, d):

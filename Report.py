@@ -81,6 +81,7 @@ class Report(dict):
             "bagging",
             
             #Tree Specific Data Types
+            "tree"
             "treeDepth",
             "treeMinSize",
 

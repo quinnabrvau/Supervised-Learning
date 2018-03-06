@@ -39,6 +39,7 @@ class TreeDriver:
             mD = params[0]
             mS = params[1]
         self.tree.buildTree(mD, mS, True)
+        rep['tree']=str(self.tree)
 
     def predict(self):
         """guesses the classes for the test data and returns a list classes"""
