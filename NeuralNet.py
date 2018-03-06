@@ -56,11 +56,9 @@ class NeuralNet:
             # adjust alpha if decay is being used
             if self.decay and self.alpha > min_alpha:
                 self.alpha = self.alpha * 1.0 / (1.0 + (decay_rate * epoch))
-                print("The alpha has decayed to: ", self.alpha)
 
             # train for a single epoch and get the training loss (how wrong the model currently is)
             train_loss = self._train_single_epoch(X_train, one_hot_encodings)
-            print("The loss (how wrong the current neural net model is) for the training data is now: ", train_loss)
 
             # get the difference (delta) between the previous and current training loss
             train_loss_delta = previous_training_loss - train_loss
@@ -68,11 +66,17 @@ class NeuralNet:
 
             # see how well this model predicts the validation set and get the validation loss
             Y_valid_predict, valid_loss = self.predict(X_valid, Y_valid)
-            print("The loss for the validation data (testing the training model) is now: ", valid_loss)
 
             # get the difference (delta) between the previous and current validation loss
             valid_loss_delta = previous_valid_loss - valid_loss
             previous_valid_loss = valid_loss  # update the previous validation loss
+
+            # every 15 epochs, print info on the alpha and loss
+            if epoch % 15 == 0:
+                print("For epoch ", epoch, ":")
+                print("\talpha = ", self.alpha)
+                print("\ttraining loss = ", train_loss)
+                print("\tvalidation loss = ", valid_loss)
 
             # as long as we have run at least the min_epochs
             # if our delta for training loss is too small or our delta for validation loss too big

@@ -1,4 +1,4 @@
-""""TestDriver.py by Shannon Ladymon (UWNetID: sladymon)
+""""NNDriver.py by Shannon Ladymon (UWNetID: sladymon)
 in partnership with Quinn Abrahams-Vaughn (UWNetID: abrahq)
 
 CSE 415 Winter 2018
