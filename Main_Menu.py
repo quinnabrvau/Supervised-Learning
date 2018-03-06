@@ -110,7 +110,7 @@ def net_menu():
 \tTypically, you use about 1-2x the number of nodes in your input layer.
 \tThe more nodes you have, the better the neural net can predict, 
 \tbut the more slowly it runs. 
-Enter a decimal mulitplication rate between 1.0 and 2.0:"""
+Enter a decimal multiplication rate between 1.0 and 2.0:"""
     alpha_start_message = """\nWhat value for alpha (learning rate) do you want to use? 
 \tTypically alpha is in the range [0.1, 0.00001].
 \tIf you have a large alpha [0.1], your model may jump around too much.
@@ -174,7 +174,7 @@ def bagging_menu():
     global BAGGING, BAGSIZE
     menu_message = """\nBagging is a way to fight over fitting by breaking up the
 \t data into smaller subsets. This is done by running the
-\t agent on a subset of the atributes and a subset of the
+\t agent on a subset of the attributes and a subset of the
 \t total cases. Then the most common choice is returned.
 Choose yes/no(type 'y'/'n') """
     while (True):

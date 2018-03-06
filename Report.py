@@ -51,11 +51,11 @@ class Report(dict):
 
             #Nueral Net Specific Data Types
             "netTrainCycle":
-            "The nueral net performed XXXX training cycles",
+            "The neural net performed XXXX training cycles",
             "netAlpha":
-            "The nueral net used an alpha of XXXX",
+            "The neural net used an alpha of XXXX",
             "netLayers":
-            "The nueral net was made of XXXXx layers\n",
+            "The neural net was made of XXXXx layers\n",
 
             #Data set
             "input":"Raw Training Data Sample\nXXXX",
