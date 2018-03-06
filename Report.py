@@ -28,9 +28,9 @@ class Report(dict):
             "datasetTestSize":
             "The size of the testing data is XXXX\n",
             "agent":
-            "This run used a XXXX agent",
+            "This run used a XXXX agent\n",
             "bagging":
-            "This agent was enhanced with bagging. XXXX total agents were used",
+            "This agent was enhanced with bagging. XXXX total agents were used\n",
             "openTime":
             "It took XXXX seconds to prepare the agent(s)",
             "buildTime":
@@ -71,16 +71,15 @@ class Report(dict):
             "inputNorm",
             "datasetTrainSize",
             "datasetValidSize",
-            "datasetTestSize",
-            "agent",
-            "bagging",
-            "openTime",
+            "datasetTestSize","openTime",
             "buildTime",
             "predictTime",
             "totalTime",
             "predictAccuracy",
             "expectedAccuracy",
-
+            "agent",
+            "bagging",
+            
             #Tree Specific Data Types
             "treeDepth",
             "treeMinSize",
