@@ -30,6 +30,8 @@ def main_menu():
     print("""
     --------------------------------------------------------------------------
 
+                         Supervised Learning Systems
+                         
     Welcome to Quinn Abrahams-Vaughn & Shannon Ladymon's Final Project
     (UWNetIDs: abrahq and sladymon)
 
