@@ -9,9 +9,16 @@ Prints a report of relevant information on how the learning agent did
 
 
 class Report(dict):
+    """A class to create a report on the program that was run
+    including information on the dataset with samples of the data,
+    information on the learning agent and chosen parameters,
+    information on the amount of time and number of training cycles used,
+    and information on the accuracy and predictions the agent made"""
     def __init__(self):
         dict.__init__(self)
-        self.explainer = { # strings to explain data
+
+        # strings to explain data
+        self.explainer = {
             "dataset":
             "This run used the XXXX dataset",
             "datasetTrainSize":
@@ -35,6 +42,7 @@ class Report(dict):
             "predictAccuracy":
             "The prediction accurately guessed XXXX%  of the test data",
             'expectedAccuracy':"The benchmark accuracy for this data set is XXXX%\n",
+
             #Tree Specific Data Types
             "treeDepth":
             "The tree was built to a depth of XXXX",
@@ -54,7 +62,9 @@ class Report(dict):
             "inputData":"Training Data Statistics\nXXXX",
             "inputNorm":"Normalized Training Data Sample\nXXXX",
         }
-        self.order = [ # order to print output
+
+        # order to print output
+        self.order = [
             "dataset",
             "input",
             "inputData",
@@ -70,9 +80,11 @@ class Report(dict):
             "totalTime",
             "predictAccuracy",
             "expectedAccuracy",
+
             #Tree Specific Data Types
             "treeDepth",
             "treeMinSize",
+
             #Nueral Net Specific Data Types
             "netTrainCycle",
             "netAlpha",
@@ -81,6 +93,7 @@ class Report(dict):
         ]
 
     def __str__(self):
+        """Returns a string version of the report"""
         out = "!!!!!!! REPORTED STATISTICS !!!!!!!\n"
         for k in self.order:
             if k in self.keys():

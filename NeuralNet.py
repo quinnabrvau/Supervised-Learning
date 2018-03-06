@@ -16,7 +16,6 @@ import numpy as np
 
 class NeuralNet:
     """A neural net class which can be trained on ndarrays of data and classifications."""
-
     def __init__(self, num_features, num_classifications, alpha=10e-6, decay=False, layers=2.0):
         self.num_features = num_features
         self.num_classifications = num_classifications
@@ -82,6 +81,8 @@ class NeuralNet:
                 print("The neural net is stopping since the loss has converged.")
                 return epoch  # stop running
 
+        return max_epochs
+
 
     def _train_single_epoch(self, X, one_hot_encodings):
         """Does a single step of feedforward and backpropogation"""
@@ -123,7 +124,7 @@ class NeuralNet:
         return np.argmax(Y_hat, axis=1), loss
 
 
-def sigmoid(Z):  # TODO: consider changing to tanh instead
+def sigmoid(Z):
     """Sigmoid function to use between input and hidden layer for activation"""
     return 1.0 / (1.0 + np.exp(-Z))
 
