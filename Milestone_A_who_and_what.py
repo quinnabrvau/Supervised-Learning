@@ -98,7 +98,7 @@ reference2 = '''"Neural Networks from Scratch in Python," by Cristian Dima,
     available online at: http://www.cristiandima.com/neural-networks-from-scratch-in-python/'''
 
 reference3 = ''''"Random Forests for Regression and Classification," by Adele Cutler, Utah State University,
-    available online at: http://www.math.usu.edu/adele/RandomForests/Ovronnaz.pdf'''
+    available online at: http://www.math.usu.edu/adele/TreeDrivers/Ovronnaz.pdf'''
 
 our_submission = Who_and_what(team, OPTION, title, approach, workload_distribution, [reference1, reference2, reference3])
 

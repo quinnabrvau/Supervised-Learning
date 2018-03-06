@@ -8,8 +8,8 @@ Main Menu, entry point to the project
 """
 
 from Bagger import BaggerList
-from RandomForest import RandomForest
-from NNTestDriver import NNTestDriver
+from TreeDriver import TreeDriver
+from NNDriver import NNDriver
 from Report import Report
 from time import time
 
@@ -270,12 +270,12 @@ def run_from_menu():
         REPORT['bagging'] = str(BAGSIZE)
     if AGENT == 't':
         REPORT['agent'] = "Decision Tree"
-        BL = BaggerList(RandomForest, DATASET, BAGSIZE, REPORT)
+        BL = BaggerList(TreeDriver, DATASET, BAGSIZE, REPORT)
         BL.params(tree_menu())
     elif AGENT == 'n':
         REPORT['agent'] = "Neural Network"
         p = net_menu()
-        BL = BaggerList(NNTestDriver, DATASET, BAGSIZE, REPORT, p)
+        BL = BaggerList(NNDriver, DATASET, BAGSIZE, REPORT, p)
     else:
         print("Something went wrong, exiting ...")
         return

@@ -1,10 +1,10 @@
-"""RandomForest.py by Quinn Abrahams-Vaughn (UWNetID: abrahq)
+"""TreeDriver.py by Quinn Abrahams-Vaughn (UWNetID: abrahq)
 in partnership with Shannon Ladymon (UWNetID: sladymon)
 
 CSE 415 Winter 2018
 Final Project
 
-Builds a RandomForest class that wraps a Decision tree in a standard method
+Builds a TreeDriver class that wraps a Decision tree in a standard method
 reference: https://machinelearningmastery.com/implement-decision-tree-algorithm-scratch-python/
 """
 
@@ -13,7 +13,7 @@ from DecisionTree import DecisionTree, findApproxDepth
 from Report import Report
 
 
-class RandomForest:
+class TreeDriver:
     def __init__(self, train, test, valid,p):
         self.train, self.test, self.valid = train, test, valid
         self.tree = DecisionTree(train)
@@ -54,7 +54,7 @@ class RandomForest:
 if __name__ == "__main__":
     # train, test, valid = getWineData(1)
     train, test, valid = getIrisData(1)
-    rf = RandomForest(train, test, valid)
+    rf = TreeDriver(train, test, valid)
     params = rf.params()
     print(params)
     rf.build(params)

@@ -11,7 +11,7 @@ import numpy as np
 from NeuralNet import NeuralNet
 import time
 
-class NNTestDriver:
+class NNDriver:
     """Class which gets the data ready to be used in the neural net
     and calls the train and predict functions with the parameters specified by the user"""
     def __init__(self,train,test,valid,p):
@@ -64,6 +64,6 @@ if __name__ == "__main__":
     # Get training, testing, and validation data
     train, test, valid = getWineData(1)
 
-    searcher = NNTestDriver(train,test,valid)
+    searcher = NNDriver(train,test,valid)
     searcher.build()
     print(searcher.predict())

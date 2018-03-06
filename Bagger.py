@@ -9,7 +9,7 @@ Bagger and BaggerList objects
 
 from dataSet import dataSet, getIrisData, getWineData
 from data import data
-from RandomForest import RandomForest
+from TreeDriver import TreeDriver
 from Report import Report
 from math import sqrt, ceil
 from random import sample
@@ -156,7 +156,7 @@ class BaggerList(list):
 
 
 if __name__ == "__main__":
-    BL = BaggerList(RandomForest, "wine", 1)
-    # BL = BaggerList(RandomForest,"iris",100)
+    BL = BaggerList(TreeDriver, "wine", 1)
+    # BL = BaggerList(TreeDriver,"iris",100)
     BL.build()
     print(BL.predict())
